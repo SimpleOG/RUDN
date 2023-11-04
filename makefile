@@ -1,23 +1,31 @@
-createmigration:
-	migrate create -ext sql -dir db/migrations -seq init_schema
+createmigration1:
+	migrate create -ext sql -dir db/migrations -seq init_education
+createmigration2:
+	migrate create -ext sql -dir db/migrations -seq init_users
 image:
 	docker pull postgres:12-alpine
 postgres:
 	docker run --name postgres -p 5440:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=1234 -d postgres:12-alpine
-createdb:
+createdb1:
 	docker exec -it postgres createdb --username=root --owner=root education
-dropdb:
+dropdb1:
 	docker exec -it postgres dropdb education
-migrateup:
-	migrate -path  db/migrations -database "postgresql://root:1234@localhost:5440/education?sslmode=disable" -verbose up
-migratedown:
-	migrate -path  db/migrations -database "postgresql://root:1234@localhost:5440/education?sslmode=disable" -verbose down
+migrateup1:
+	migrate -path  db/edumigrations -database "postgresql://root:1234@localhost:5440/education?sslmode=disable" -verbose up
+migratedown1:
+	migrate -path  db/edumigrations -database "postgresql://root:1234@localhost:5440/education?sslmode=disable" -verbose down
+createdb2:
+	docker exec -it postgres createdb --username=root --owner=root users
+dropdb2:
+	docker exec -it postgres dropdb users
+migrateup2:
+	migrate -path  db/usersMigrations -database "postgresql://root:1234@localhost:5440/users?sslmode=disable" -verbose up
+migratedown2:
+	migrate -path  db/usersMigrations -database "postgresql://root:1234@localhost:5440/users?sslmode=disable" -verbose down
 sqlc:
 	sqlc generate
 start:
 	docker start postgres
 test:
 	go test -v -cover ./...
-server:
-	go run ./cmd/main.go
-.PHONY: createmigration  postgres createdb dropdb migrateup migratedown sqlc image test start server
+.PHONY: createmigration1 createmigration2  postgres createdb1 dropdb1 migrateup1 migratedown1 createdb2 dropdb2 migrateup2 migratedown2 sqlc image test start

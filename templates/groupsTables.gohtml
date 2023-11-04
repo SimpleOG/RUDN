@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Таблица групп</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../css/allTeachersTable.css">
+    <link rel="stylesheet" href="../css/homepage.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="bgimage">
+    {{template "header"}}
+    <div class="table_container">
+        <table class="table_dark">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Направление</th>
+                <th>Номер</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{ range . }}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td><a href="http://localhost:8080/teachers?id={{.ID}}">{{.Name}}</a></td>
+                    <td>{{.Number}}</td>
+                </tr>
+            {{ end }}
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
+</body>
+</html>

@@ -11,7 +11,7 @@ func (s *Server) listAllTeachers(ctx *gin.Context) {
 		//if err==pgx.norows
 		return
 	}
-	renderTemplate(ctx, "teachersTables.gohtml", data)
+	renderTemplate(ctx, "teachersTables.gohtml", gin.H{"data": data})
 
 }
 func (s *Server) DisplayProfile(ctx *gin.Context) {
@@ -24,6 +24,6 @@ func (s *Server) DisplayProfile(ctx *gin.Context) {
 		return
 	}
 
-	renderTemplate(ctx, "profile.gohtml", data)
+	renderTemplate(ctx, "profile.gohtml", gin.H{"data": data})
 
 }

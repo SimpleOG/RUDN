@@ -52,8 +52,9 @@ func init() {
 }
 
 // для обработки html файликов, которые содержат динамические данные
-func renderTemplate(c *gin.Context, templateName string, data interface{}) {
-	err := templates.ExecuteTemplate(c.Writer, templateName, data)
+func renderTemplate(c *gin.Context, templateName string, h gin.H) {
+	//https://stackoverflow.com/questions/25329647/golang-template-with-multiple-structs
+	err := templates.ExecuteTemplate(c.Writer, templateName, h)
 	if err != nil {
 		// Обработка ошибки
 		c.AbortWithError(http.StatusInternalServerError, err)

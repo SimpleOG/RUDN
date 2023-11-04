@@ -28,3 +28,6 @@
 .table_dark td:last-child {
     border-right: none;
 }
+.table_dark tr:nth-child(n+5) {
+    display:none;
+}

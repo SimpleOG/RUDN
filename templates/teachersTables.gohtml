@@ -21,10 +21,10 @@
             </tr>
             </thead>
             <tbody>
-            {{ range . }}
+            {{ range .data }}
                 <tr>
                     <td>{{.ID}}</td>
-                    <td><a href="http://localhost:8080/teachers?id={{.ID}}">{{.FullName}}</a></td>
+                    <td><a href="{{template "address"}}teachers?id={{.ID}}">{{.FullName}}</a></td>
                     <td>{{.Age}}</td>
                 </tr>
             {{ end }}

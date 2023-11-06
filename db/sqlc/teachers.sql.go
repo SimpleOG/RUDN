@@ -12,51 +12,56 @@ import (
 const createTeacher = `-- name: CreateTeacher :one
 INSERT INTO teachers (
     full_name,
-    age
+    department
 ) VALUES (
              $1, $2
-         ) RETURNING id, full_name, age
+         ) RETURNING id, full_name, department
 `
 
 type CreateTeacherParams struct {
-	FullName string `json:"full_name"`
-	Age      int32  `json:"age"`
+	FullName   string `json:"full_name"`
+	Department string `json:"department"`
 }
 
 func (q *Queries) CreateTeacher(ctx context.Context, arg CreateTeacherParams) (Teacher, error) {
-	row := q.db.QueryRow(ctx, createTeacher, arg.FullName, arg.Age)
+	row := q.db.QueryRow(ctx, createTeacher, arg.FullName, arg.Department)
 	var i Teacher
-	err := row.Scan(&i.ID, &i.FullName, &i.Age)
+	err := row.Scan(&i.ID, &i.FullName, &i.Department)
 	return i, err
 }
 
 const getTeacher = `-- name: GetTeacher :one
-SELECT id, full_name, age FROM teachers
-WHERE id = $1 LIMIT 1
+SELECT id, full_name, department FROM teachers
+WHERE full_name = $1 LIMIT 1
 `
 
-func (q *Queries) GetTeacher(ctx context.Context, id int32) (Teacher, error) {
-	row := q.db.QueryRow(ctx, getTeacher, id)
+func (q *Queries) GetTeacher(ctx context.Context, fullName string) (Teacher, error) {
+	row := q.db.QueryRow(ctx, getTeacher, fullName)
 	var i Teacher
-	err := row.Scan(&i.ID, &i.FullName, &i.Age)
+	err := row.Scan(&i.ID, &i.FullName, &i.Department)
 	return i, err
 }
 
 const listAllTeachers = `-- name: ListAllTeachers :many
-SELECT id, full_name, age FROM teachers
-ORDER BY id
+SELECT id, code, number, name FROM groups
+ORDER BY name
 `
 
-func (q *Queries) ListAllTeachers(ctx context.Context) ([]Teacher, error) {
+func (q *Queries) ListAllTeachers(ctx context.Context) ([]Group, error) {
 	rows, err := q.db.Query(ctx, listAllTeachers)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Teacher{}
+	items := []Group{}
 	for rows.Next() {
-		var i Teacher
-		if err := rows.Scan(&i.ID, &i.FullName, &i.Age); err != nil {
+		var i Group
+		if err := rows.Scan(
+			&i.ID,
+			&i.Code,
+			&i.Number,
+			&i.Name,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

@@ -9,16 +9,21 @@ import (
 )
 
 type Querier interface {
+	CreateCourse(ctx context.Context, arg CreateCourseParams) (Course, error)
 	CreateGroup(ctx context.Context, arg CreateGroupParams) (Group, error)
+	CreateGroupsCourse(ctx context.Context, arg CreateGroupsCourseParams) (CoursesGroup, error)
 	CreateTeacher(ctx context.Context, arg CreateTeacherParams) (Teacher, error)
-	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
-	GetGroup(ctx context.Context, id int32) (Group, error)
-	GetTeacher(ctx context.Context, id int32) (Teacher, error)
-	GetUser(ctx context.Context, username string) (User, error)
+	CreateTeachersCourse(ctx context.Context, arg CreateTeachersCourseParams) (TeachersCourse, error)
+	GetCourse(ctx context.Context, name string) (Course, error)
+	GetGroup(ctx context.Context, name string) (Group, error)
+	GetGroupsCourse(ctx context.Context, arg GetGroupsCourseParams) (CoursesGroup, error)
+	GetTeacher(ctx context.Context, fullName string) (Teacher, error)
+	GetTeachersCourse(ctx context.Context, arg GetTeachersCourseParams) (TeachersCourse, error)
+	ListAllCourses(ctx context.Context) ([]Course, error)
 	ListAllGroups(ctx context.Context) ([]Group, error)
-	ListAllTeachers(ctx context.Context) ([]Teacher, error)
-	//LIMIT $2
-	ListAllTeachersGroups(ctx context.Context, id int32) ([]ListAllTeachersGroupsRow, error)
+	ListAllGroupsCourse(ctx context.Context) ([]CoursesGroup, error)
+	ListAllTeachers(ctx context.Context) ([]Group, error)
+	ListAllTeachersCourses(ctx context.Context) ([]TeachersCourse, error)
 }
 
 var _ Querier = (*Queries)(nil)

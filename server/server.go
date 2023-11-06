@@ -35,8 +35,7 @@ func (s *Server) setupRouter() {
 	router.GET("/all_teachers", s.listAllTeachers)
 	router.GET("/all_groups", s.listAllGroups)
 	router.GET("/teachers", s.DisplayProfile)
-	router.GET("/login", s.Registration)
-	router.POST("/login", s.SignIn)
+
 	//router.GET("/groups", s.getProfile)
 
 	s.router = router

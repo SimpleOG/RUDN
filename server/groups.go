@@ -8,5 +8,6 @@ func (s *Server) listAllGroups(ctx *gin.Context) {
 		//if err==pgx.norows
 		return
 	}
+
 	renderTemplate(ctx, "groupsTables.gohtml", gin.H{"data": data})
 }

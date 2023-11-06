@@ -6,10 +6,24 @@ package db
 
 import ()
 
+type Course struct {
+	ID                int32  `json:"id"`
+	Name              string `json:"name"`
+	LectureHours      int32  `json:"lecture_hours"`
+	LaboratoriesHours int32  `json:"laboratories_hours"`
+	PractiseHours     int32  `json:"practise_hours"`
+}
+
+type CoursesGroup struct {
+	CourseName string `json:"course_name"`
+	GroupsID   int32  `json:"groups_id"`
+}
+
 type Group struct {
 	ID     int32  `json:"id"`
-	Name   string `json:"name"`
+	Code   string `json:"code"`
 	Number int32  `json:"number"`
+	Name   string `json:"name"`
 }
 
 type Student struct {
@@ -19,20 +33,12 @@ type Student struct {
 }
 
 type Teacher struct {
-	ID       int32  `json:"id"`
-	FullName string `json:"full_name"`
-	Age      int32  `json:"age"`
+	ID         int32  `json:"id"`
+	FullName   string `json:"full_name"`
+	Department string `json:"department"`
 }
 
-type TeachersGroup struct {
-	TeachersID int32 `json:"teachers_id"`
-	GroupsID   int32 `json:"groups_id"`
-}
-
-type User struct {
-	ID             int32  `json:"id"`
-	Username       string `json:"username"`
-	HashedPassword string `json:"hashed_password"`
-	FullName       string `json:"full_name"`
-	Email          string `json:"email"`
+type TeachersCourse struct {
+	TeachersName string `json:"teachers_name"`
+	CourseName   string `json:"course_name"`
 }

@@ -1,7 +1,8 @@
-package configs
+package util
 
 import (
 	"github.com/spf13/viper"
+	"path/filepath"
 )
 
 type Config struct {
@@ -12,8 +13,9 @@ type Config struct {
 
 func InitConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
-	viper.SetConfigName("app")
+	file, err := filepath.Glob("*.env")
 	viper.SetConfigType("env")
+	viper.SetConfigName(file[0])
 
 	viper.AutomaticEnv()
 

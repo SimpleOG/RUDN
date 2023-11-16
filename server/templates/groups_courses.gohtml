@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Таблица курсов</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../server/css/group_course.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+<h1><span class="yellow">{{.name}}</span></h1>
+
+<table class="container">
+    <thead>
+    <tr>
+        <th><h1>Название курса</h1></th>
+        <th><h1>Лекционные часы</h1></th>
+        <th><h1>Семинарские часы</h1></th>
+        <th><h1>Практические часы</h1></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ range .data }}
+        <tr>
+            <td><a href="{{template "address"}}course_groups?name={{.CourseName}}">{{.CourseName}}</a></td>
+            <td>{{.LectureHours}}</td>
+            <td>{{.LaboratoriesHours}}</td>
+            <td>{{.PractiseHours}}</td>
+        </tr>
+    {{ end }}
+    </tbody>
+
+</table>
+</body>

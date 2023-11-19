@@ -25,7 +25,8 @@ type Querier interface {
 	ListAllGroups(ctx context.Context) ([]Group, error)
 	ListAllTeachers(ctx context.Context) ([]Teacher, error)
 	ListAllTeachersCourses(ctx context.Context, teachersName string) ([]TeachersCourse, error)
-	FillTeachers()error
+	FillTeachers() error
+	FillCourses() error
 }
 
 var _ Querier = (*Queries)(nil)

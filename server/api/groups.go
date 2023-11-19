@@ -1,6 +1,9 @@
 package api
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 func (s *Server) listAllGroups(ctx *gin.Context) {
 	data, err := s.store.ListAllGroups(ctx)
@@ -8,6 +11,6 @@ func (s *Server) listAllGroups(ctx *gin.Context) {
 		//if err==pgx.norows
 		return
 	}
-
-	renderTemplate(ctx, "groupsTables.gohtml", gin.H{"data": data})
+	ctx.JSON(http.StatusOK, data)
+	//renderTemplate(ctx, "groupsTables.gohtml", gin.H{"data": data})
 }

@@ -3,7 +3,7 @@
     padding: 0px;
 }
 .bgimage{
-    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url("рудн.jpg");
+    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url("../../client/src/components/homepage/рудн.jpg");
     background-size: cover;
     width: 100%;
     height: 100vh;

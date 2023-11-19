@@ -3,13 +3,13 @@ package db
 import (
 	"context"
 	"github.com/stretchr/testify/require"
-	db "rudnWebApp/db/sqlc"
-	"rudnWebApp/util"
+	db2 "rudnWebApp/server/db/sqlc"
+	"rudnWebApp/server/util"
 	"testing"
 )
 
-func CreateRandomGroup(t *testing.T) db.Group {
-	arg := db.CreateGroupParams{
+func CreateRandomGroup(t *testing.T) db2.Group {
+	arg := db2.CreateGroupParams{
 		Name:   util.RandomName(),
 		Code:   util.RandomString(3),
 		Number: int32(util.RandomInt(1, 3)),

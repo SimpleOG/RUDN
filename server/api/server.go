@@ -2,11 +2,11 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
+	"rudnWebApp/server/db/sqlc"
+	configs "rudnWebApp/server/util"
 
 	"html/template"
 	"net/http"
-	db "rudnWebApp/db/sqlc"
-	configs "rudnWebApp/util"
 )
 
 const templatepath = "C:\\Users\\Oleg\\GolandProjects\\wepApp\\templates/"
@@ -29,7 +29,7 @@ func NewServer(config configs.Config, store db.Store) (*Server, error) {
 }
 func (s *Server) setupRouter() {
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*") //подключаем папку с html
+	router.LoadHTMLGlob("server/templates/*") //подключаем папку с html
 	// подключаем визуал
 	router.Static("/css", "./css")
 	//настройка роутов
@@ -51,7 +51,7 @@ func (s *Server) Start(address string) error {
 var templates *template.Template
 
 func init() {
-	templates = template.Must(template.ParseGlob("templates/*"))
+	templates = template.Must(template.ParseGlob("server/templates/*"))
 }
 
 // для обработки html файликов, которые содержат динамические данные

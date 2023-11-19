@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
-	db "rudnWebApp/db/sqlc"
 	"rudnWebApp/server/api"
-	configs "rudnWebApp/util"
+	"rudnWebApp/server/db/sqlc"
+	configs "rudnWebApp/server/util"
 )
 
 func main() {
-	config, err := configs.InitConfig(".")
+	config, err := configs.InitConfig("C:\\Users\\Oleg\\GolandProjects\\rudnWebApp\\server/")
 	if err != nil {
 		log.Fatalf("cannot load config")
 	}

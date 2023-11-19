@@ -4,15 +4,15 @@ import (
 	"context"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"os"
-	"rudnWebApp/db/sqlc"
-	configs "rudnWebApp/util"
+	"rudnWebApp/server/db/sqlc"
+	configs "rudnWebApp/server/util"
 	"sync"
 
 	"log"
 	"testing"
 )
 
-var testQueries db.Store
+var testQueries db.db
 var testDB *pgxpool.Pool
 
 func gorutineCreate(fn func()) {

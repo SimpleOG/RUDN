@@ -13,7 +13,7 @@ CREATE TABLE "groups" (
                           "name" varchar  NOT NULL
 );
 
-CREATE TABLE "Educational program" (
+CREATE TABLE "educational_program" (
                            "id" serial NOT NULL,
                            "name" varchar PRIMARY KEY NOT NULL,
                            "lecture_hours" integer NOT NULL,

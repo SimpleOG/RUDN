@@ -3,13 +3,13 @@ package db
 import (
 	"context"
 	"github.com/stretchr/testify/require"
-	db "rudnWebApp/db/sqlc"
-	"rudnWebApp/util"
+	db2 "rudnWebApp/server/db/sqlc"
+	"rudnWebApp/server/util"
 	"testing"
 )
 
-func CreateRandomTeacher(t *testing.T) db.Teacher {
-	arg := db.CreateTeacherParams{
+func CreateRandomTeacher(t *testing.T) db2.Teacher {
+	arg := db2.CreateTeacherParams{
 		FullName:   util.RandomName(),
 		Department: util.RandomDepartment(),
 	}

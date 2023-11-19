@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	db "rudnWebApp/db/sqlc"
+	"rudnWebApp/server/db/sqlc"
 	"sync"
 )
 

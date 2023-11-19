@@ -3,14 +3,14 @@ package db
 import (
 	"context"
 	"github.com/stretchr/testify/require"
-	db "rudnWebApp/db/sqlc"
+	db2 "rudnWebApp/server/db/sqlc"
 	"testing"
 )
 
-func CreateRandomTeachersCourse(t *testing.T) db.TeachersCourse {
+func CreateRandomTeachersCourse(t *testing.T) db2.TeachersCourse {
 	arg1 := CreateRandomTeacher(t)
 	arg2 := CreateRandomCourse(t)
-	params := db.CreateTeachersCourseParams{
+	params := db2.CreateTeachersCourseParams{
 		TeachersName: arg1.FullName,
 		CourseName:   arg2.Name,
 	}
@@ -26,7 +26,7 @@ func TestCreateRandomTeachersCourse(t *testing.T) {
 }
 func TestGetTeachersCourse(t *testing.T) {
 	arg := CreateRandomTeachersCourse(t)
-	params := db.GetTeachersCourseParams{
+	params := db2.GetTeachersCourseParams{
 		TeachersName: arg.TeachersName,
 		CourseName:   arg.CourseName,
 	}

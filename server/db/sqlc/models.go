@@ -4,8 +4,6 @@
 
 package db
 
-import ()
-
 type Course struct {
 	ID                int32  `json:"id"`
 	Name              string `json:"name"`

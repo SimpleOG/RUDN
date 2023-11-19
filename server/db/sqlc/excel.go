@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	//тупо счётчик
 	//Образовательная программа
 	educationForm = iota // Форма обучения
 	lvlOp                // Уровень ОП
@@ -55,13 +56,13 @@ const (
 	end   = 1652
 )
 
-func ReadExcelFile(find int) ([]string, error) {
+func ReadExcelColumn(find int) ([]string, error) {
+
 	f, err := excelize.OpenFile("считать.xlsx")
 	if err != nil {
 		log.Fatalln(err)
 	}
 	defer func() {
-		// Close the spreadsheet.
 		if err := f.Close(); err != nil {
 			log.Fatalln(err)
 		}
@@ -82,11 +83,11 @@ func ReadExcelFile(find int) ([]string, error) {
 
 //подтянем из экселя все штуки( шучу, не все)
 
-func (q *db.Queries) FillCourses() {
-
+func (q *Queries) FillCourses() (err error) {
+	return err
 }
 
-func (q *db.Queries) FillTeachers() (err error) {
+func (q *Queries) FillTeachers() (err error) {
 	var wg sync.WaitGroup
 	var fullName []string
 	var departments []string
@@ -94,28 +95,28 @@ func (q *db.Queries) FillTeachers() (err error) {
 	var condition []string
 	wg.Add(4)
 	go func() {
-		fullName, err = ReadExcelFile(FIO)
+		fullName, err = ReadExcelColumn(FIO)
 		if err != nil {
 			log.Fatalln("Не удалось найти фио", err)
 		}
 		wg.Done()
 	}()
 	go func() {
-		departments, err = ReadExcelFile(department)
+		departments, err = ReadExcelColumn(department)
 		if err != nil {
 			log.Fatalln("Не удалось найти фио", err)
 		}
 		wg.Done()
 	}()
 	go func() {
-		posts, err = ReadExcelFile(post)
+		posts, err = ReadExcelColumn(post)
 		if err != nil {
 			log.Fatalln("Не удалось найти фио", err)
 		}
 		wg.Done()
 	}()
 	go func() {
-		condition, err = ReadExcelFile(conditions)
+		condition, err = ReadExcelColumn(conditions)
 		if err != nil {
 			log.Fatalln("Не удалось найти фио", err)
 		}
@@ -139,10 +140,6 @@ func (q *db.Queries) FillTeachers() (err error) {
 	fn := func(args []CreateTeacherParams) []CreateTeacherParams {
 		keys := make(map[string]bool)
 		var list []CreateTeacherParams
-
-		// If the key(values of the slice) is not equal
-		// to the already present value in new slice (list)
-		// then we append it. else we jump on another element.
 		for _, entry := range args {
 			if entry.FullName == "" {
 				continue
@@ -170,7 +167,7 @@ func (q *db.Queries) FillTeachers() (err error) {
 	fmt.Println("Я всё")
 	return
 }
-func (q *db.Queries) FillGroups() {
+func (q *Queries) FillRow() {
 
 }
 

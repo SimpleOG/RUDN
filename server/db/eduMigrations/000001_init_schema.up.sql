@@ -13,12 +13,12 @@ CREATE TABLE "groups" (
                           "name" varchar  NOT NULL
 );
 
-CREATE TABLE "educational_program" (
-                           "id" serial NOT NULL,
-                           "name" varchar PRIMARY KEY NOT NULL,
-                           "lecture_hours" integer NOT NULL,
-                           "laboratories_hours" integer NOT NULL,
-                           "practise_hours" integer NOT NULL
+CREATE TABLE "courses" (
+                                       "id" serial NOT NULL,
+                                       "name" varchar PRIMARY KEY NOT NULL,
+                                       "lecture_hours" integer NOT NULL,
+                                       "laboratories_hours" integer NOT NULL,
+                                       "practise_hours" integer NOT NULL
 );
 
 CREATE TABLE "teachers_courses" (
@@ -33,8 +33,8 @@ CREATE TABLE "students" (
 );
 
 CREATE TABLE "courses_groups" (
-                                   "course_name" varchar NOT NULL,
-                                   "groups_id" integer NOT NULL
+                                  "course_name" varchar NOT NULL,
+                                  "groups_id" integer NOT NULL
 
 );
 
@@ -54,5 +54,3 @@ ALTER TABLE "courses_groups" ADD FOREIGN KEY ("course_name") REFERENCES "courses
 
 
 ALTER TABLE "courses_groups" ADD FOREIGN KEY ("groups_id") REFERENCES "groups" ("id");
-
-

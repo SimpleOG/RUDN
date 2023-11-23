@@ -1,26 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Table from "../table/table";
-import { paginate } from "../../utils/paginate";
-import { Pagination } from "../pagination/pagination";
+import Pagination from "../pagination/pagination";
+import {paginate} from "../../utils/paginate";
+import {getFields} from "../../utils/getFields";
+import TeachersTable from "./teachersTable";
 
 const Teachers = () => {
 
     console.log("rendered");
     const [teachers, setTeachers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    // const [teacherColumn, setTeacherColumn] = useState({});
 
     const pageSize = 10;
+    let teacherColumns;
 
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
 
 
-    useEffect( () => {
+    useEffect(() => {
         const fetchData = async () => {
             const data = await fetch("http://localhost:8080/all_teachers");
             const response = await data.json()
             setTeachers(response);
+
+            teacherColumns = getFields(response[0]);
+            console.log(teacherColumns);
+
         }
 
         fetchData();
@@ -34,7 +42,7 @@ const Teachers = () => {
         teachers.length > 0
             ?
             <>
-                <Table data={teacherCrop}/>
+                <TeachersTable teachers={teacherCrop}/>
                 <Pagination
                     itemsCount={count}
                     pageSize={pageSize}
@@ -42,7 +50,7 @@ const Teachers = () => {
                     onPageChange={handlePageChange}
                 />
             </>
-             :
+            :
             "Loading..."
     );
 };

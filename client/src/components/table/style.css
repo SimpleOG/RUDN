@@ -8,7 +8,7 @@
 
 .table_dark {
     font-family: 'Nunito Sans', sans-serif;
-    box-sizing: content-box;
+    box-sizing: border-box;
     font-size: 14px;
     width: 100%;
     text-align: left;
@@ -16,9 +16,6 @@
     background: #252F48;
 }
 
-.table_dark thead th {
-
-}
 
 .table_container{
     width: 100%;
@@ -33,6 +30,11 @@
     border-bottom: 1px solid #37B5A5;
     border-right:1px solid #37B5A5;
     padding: 7px 17px;
+}
+
+.table_dark td a {
+    text-decoration: none;
+    color: white;
 }
 
 

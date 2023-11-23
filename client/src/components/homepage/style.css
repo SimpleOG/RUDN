@@ -1,61 +1,6 @@
-* {
-    margin: 0;
-    padding: 0;
-}
-
-.container {
-    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url("рудн.jpg");
-    background-size: cover;
-    min-height: 100vh;
-}
-
-.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-.navbar__main ul li a  {
-    font-weight: bold;
-    font-size: 22px;
-    font-family: 'montserrat', sans-serif;
-    text-decoration: none;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 90px;
-    padding: 8px 16px;
-    color: #00ccff;
-}
-
-.navbar__secondary ul {
-    display: flex;
-    flex-direction: row;
-}
-
-.navbar__secondary ul li a {
-    padding: 8px 16px;
-    color: white;
-    text-decoration: none;
-    font-family: 'montserrat', sans-serif ;
-    font-size: 15px;
-    font-weight: bold;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-align: center;
-    vertical-align: middle;
-}
-.navbar__secondary ul li a:hover {
-    color: #00ccff;
-}
 
 
-.navbar ul {
-    list-style: none;
-}
+
 
 .content {
     display: flex;

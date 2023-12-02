@@ -38,6 +38,7 @@ CREATE TABLE "courses_groups" (
 
 );
 
+
 CREATE INDEX ON "teachers" ("full_name");
 
 CREATE INDEX ON "groups" ("name");

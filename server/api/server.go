@@ -2,9 +2,9 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-
-	"rudnWebApp/server/db/sqlc"
-	configs "rudnWebApp/server/util"
+	"log"
+	db "rudnWebApp/db/sqlc"
+	configs "rudnWebApp/util"
 )
 
 const templatepath = "C:\\Users\\Oleg\\GolandProjects\\wepApp\\templates/"
@@ -25,6 +25,13 @@ func NewServer(config configs.Config, store db.Store) (*Server, error) {
 	server.setupRouter()
 	return server, nil
 }
+func (s *Server) home(ctx *gin.Context) {
+	data, err := s.store.Get_EducationalProgram(ctx, "Прикладная информатика")
+	if err != nil {
+		log.Fatalln(err)
+	}
+	ctx.JSON(200, gin.H{"data": data})
+}
 func (s *Server) setupRouter() {
 	router := gin.Default()
 	//настройка роутов
@@ -33,7 +40,7 @@ func (s *Server) setupRouter() {
 			ctx.Header("Access-Control-Allow-Origin", "*")
 		}
 	}())
-
+	router.GET("/home", s.home)
 	s.router = router
 }
 

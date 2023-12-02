@@ -74,11 +74,11 @@ const (
 	GEK
 	total
 	start = 5
-	end   = 1645
+	end   = 1600
+	size  = end - start
 )
 
-func ReadExcelColumn(find int) ([]string, error) {
-
+func ReadExcel() ([][]string, error) {
 	f, err := excelize.OpenFile("считать.xlsx")
 	if err != nil {
 		log.Fatalln(err)
@@ -88,54 +88,34 @@ func ReadExcelColumn(find int) ([]string, error) {
 			log.Fatalln(err)
 		}
 	}()
-
 	cols, err := f.GetCols("УН сводная")
-
 	if err != nil {
-		fmt.Println(err)
-		return nil, nil
+		log.Fatalln(err)
 	}
-	rows := make([]string, 0)
-	for i := start; i < end; i++ {
-		rows = append(rows, cols[find][i])
-	}
+	for i := range cols {
+		cols[i] = cols[i][start:end]
 
-	return rows, nil
+	}
+	return cols, nil
 }
 
 // подтянем из экселя все штуки( шучу, не все)
+func fill(m map[int]int32) [size]int32 {
+	var arr [size]int32
+	for i, v := range m {
+		arr[i] = v
+	}
+	return arr
+}
 
-func (q *Queries) ReadEducationalProgram() (err error) {
-	var theCodeOfTheOOPRUDN []string
-	var directionCode []string
-	var nameOfTheProgram []string
+func (q *Queries) ReadEducationalProgram(data [][]string) ([size]int32, error) {
+	lock := new(sync.Mutex)
+	m := make(map[int]int32)
+	theCodeOfTheOOPRUDN := data[theCodeOfTheOopRudn]
+	directionCode := data[direction_code]
+	nameOfTheProgram := data[name_of_the_program]
 	var wg sync.WaitGroup
-	wg.Add(1)
-	go func() {
-		theCodeOfTheOOPRUDN, err = ReadExcelColumn(theCodeOfTheOopRudn)
-		if err != nil {
-			log.Fatalln("Не удалось найти фио", err)
-		}
-		wg.Done()
-	}()
-	wg.Add(1)
-	go func() {
-		directionCode, err = ReadExcelColumn(direction_code)
-		if err != nil {
-			log.Fatalln("Не удалось найти фио", err)
-		}
-		wg.Done()
-	}()
-	wg.Add(1)
-	go func() {
-		nameOfTheProgram, err = ReadExcelColumn(name_of_the_program)
-		if err != nil {
-			log.Fatalln("Не удалось найти фио", err)
-		}
-		wg.Done()
-	}()
-	wg.Wait()
-	for i := 0; i < len(nameOfTheProgram); i++ {
+	for i := 0; i < size; i++ {
 		wg.Add(1)
 		go func(i int) {
 			arg := Create_EducationalProgramParams{
@@ -146,64 +126,33 @@ func (q *Queries) ReadEducationalProgram() (err error) {
 			if arg.NameOfTheProgram == "" || arg.DirectionCode == "" || arg.TheCodeOfTheOOPRUDN == "" {
 				fmt.Println(i)
 			}
-			_, err = q.Create_EducationalProgram(context.Background(), arg)
+			n, err := q.Create_EducationalProgram(context.Background(), arg)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			lock.Lock()
+			m[i] = n.ID
+			lock.Unlock()
 			wg.Done()
 		}(i)
 
 	}
 	wg.Wait()
-	return
+	arr := fill(m)
+	return arr, nil
 }
-func (q *Queries) ReadDisciplineOrTypeOfAcademicWork() (err error) {
-	var Block []string
-	var Component []string
-	var Nvrup []string
-	var Nameof []string
-	var Dopinfo []string
+
+func (q *Queries) ReadDisciplineOrTypeOfAcademicWork(data [][]string) ([size]int32, error) {
+	var err error
+	lock := new(sync.Mutex)
+	m := make(map[int]int32)
+	Block := data[block]
+	Component := data[component]
+	Nvrup := data[n_v_RUP]
+	Nameof := data[name_of_the_discipline_or_type_of_academic_work]
+	Dopinfo := data[dop_info]
 	var wg sync.WaitGroup
-	wg.Add(5)
-	go func() {
-		Block, err = ReadExcelColumn(block)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-			return
-		}
-		wg.Done()
-	}()
-	go func() {
-		Component, err = ReadExcelColumn(component)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-			return
-		}
-		wg.Done()
-	}()
-	go func() {
-		Nvrup, err = ReadExcelColumn(n_v_RUP)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-			return
-		}
-		wg.Done()
-	}()
-	go func() {
-		Nameof, err = ReadExcelColumn(name_of_the_discipline_or_type_of_academic_work)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-			return
-		}
-		wg.Done()
-	}()
-	go func() {
-		Dopinfo, err = ReadExcelColumn(dop_info)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-			return
-		}
-		wg.Done()
-	}()
-	wg.Wait()
-	for i := 0; i < len(Nameof); i++ {
+	for i := 0; i < size; i++ {
 		wg.Add(1)
 		go func(i int) {
 			arg := Create_Discipline_or_type_of_academic_workParams{
@@ -213,124 +162,45 @@ func (q *Queries) ReadDisciplineOrTypeOfAcademicWork() (err error) {
 				NameOfTheDisciplineOrTypeOfAcademicWork: Nameof[i],
 				DopInfo:                                 Dopinfo[i],
 			}
-			_, err = q.Create_Discipline_or_type_of_academic_work(context.Background(), arg)
+			c, err := q.Create_Discipline_or_type_of_academic_work(context.Background(), arg)
 			if err != nil {
-				return
+				log.Fatalln(err)
 			}
+			lock.Lock()
+			m[i] = c.ID
+			lock.Unlock()
 			wg.Done()
-
 		}(i)
 	}
 	wg.Wait()
-	return
+	arr := fill(m)
+	return arr, err
 }
-func (q *Queries) ReadKW() (err error) {
-	var SemesterOrModule []string
-	var WeeksPerSemesterModule []string
-	var TypeOfEducationalWork []string
-	var LectureHours []string
-	var LaboratoriesHours []string
-	var PractiseHours []string
-	var TypeOfPaOrGia []string
-	var CourseWorks []string
-	var CourseProjects []string
-	var CourseUchAveZeOnRup []string
-	var PrZeOnRup []string
-	var nirZeByRup []string
+
+func (q *Queries) ReadKW(data [][]string) ([size]int32, error) {
+	var err error
+	lock := new(sync.Mutex)
+	m := make(map[int]int32)
+	SemesterOrModule := data[semester_or_Module]
+	WeeksPerSemesterModule := data[weeks_per_semester_module]
+	TypeOfEducationalWork := data[type_of_educational_work]
+	LectureHours := data[lecture_hours]
+	LaboratoriesHours := data[laboratories_hours]
+	PractiseHours := data[practise_hours]
+	TypeOfPaOrGia := data[type_of_PA_or_GIA]
+	CourseWorks := data[courseWorks]
+	CourseProjects := data[course_projects]
+	CourseUchAveZeOnRup := data[course_Uch_ave_ZE_on_RUP]
+	PrZeOnRup := data[pr_ZE_on_RUP]
+	nirZeByRup := data[NIR_ZE_by_RUP]
 	var wg sync.WaitGroup
-	wg.Add(12)
-	go func() {
-		SemesterOrModule, err = ReadExcelColumn(semester_or_Module)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		WeeksPerSemesterModule, err = ReadExcelColumn(weeks_per_semester_module)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		TypeOfEducationalWork, err = ReadExcelColumn(type_of_educational_work)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		LectureHours, err = ReadExcelColumn(lecture_hours)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		LaboratoriesHours, err = ReadExcelColumn(laboratories_hours)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		PractiseHours, err = ReadExcelColumn(practise_hours)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		TypeOfPaOrGia, err = ReadExcelColumn(type_of_PA_or_GIA)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		CourseWorks, err = ReadExcelColumn(course_works)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		CourseProjects, err = ReadExcelColumn(course_projects)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		CourseUchAveZeOnRup, err = ReadExcelColumn(course_Uch_ave_ZE_on_RUP)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		PrZeOnRup, err = ReadExcelColumn(pr_ZE_on_RUP)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		nirZeByRup, err = ReadExcelColumn(NIR_ZE_by_RUP)
-		if err != nil {
-			log.Fatalln("Проблема", err)
-		}
-		wg.Done()
-	}()
-	wg.Wait()
 	var (
 		weeks        int
 		lecture      int
 		laboratories int
 		practise     int
 	)
-	for i := 0; i < len(SemesterOrModule); i++ {
+	for i := 0; i < size; i++ {
 		wg.Add(1)
 		go func(i int) {
 			if WeeksPerSemesterModule[i] == "" {
@@ -379,7 +249,10 @@ func (q *Queries) ReadKW() (err error) {
 				PrZEOnRUP:              PrZeOnRup[i],
 				NIRZEByRUP:             nirZeByRup[i],
 			}
-			_, err = q.Create_k_w(context.Background(), arg)
+			c, err := q.Create_k_w(context.Background(), arg)
+			lock.Lock()
+			m[i] = c.ID
+			lock.Unlock()
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -388,96 +261,27 @@ func (q *Queries) ReadKW() (err error) {
 
 	}
 	wg.Wait()
-	return
+	arr := fill(m)
+	return arr, err
 }
-func (q *Queries) ReadTheContingentOfStudents() (err error) {
-	var Code []string
-	var groupNumber []string
-	var ofGroups []string
-	var Subgroups []string
-	var totalPeople []string
-	var rf []string
-	var Foreign []string
-	var standart []string
-	var Calculated []string
-	var pk []string
 
+func (q *Queries) ReadTheContingentOfStudents(data [][]string) ([size]int32, error) {
+	var err error
+	lock := new(sync.Mutex)
+	m := make(map[int]int32)
+	Code := data[code]
+	groupNumber := data[group_number]
+	ofGroups := data[of_groups]
+	Subgroups := data[subgroups]
+	totalPeople := data[total_people]
+	rf := data[RF]
+	Foreign := data[foreign]
+	standart := data[standard]
+	Calculated := data[calculated]
+	pk := data[PK]
 	var wg sync.WaitGroup
-	wg.Add(10)
-	go func() {
-		Code, err = ReadExcelColumn(code)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		groupNumber, err = ReadExcelColumn(group_number)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		ofGroups, err = ReadExcelColumn(of_groups)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		Subgroups, err = ReadExcelColumn(subgroups)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		totalPeople, err = ReadExcelColumn(total_people)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		rf, err = ReadExcelColumn(RF)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		Foreign, err = ReadExcelColumn(foreign)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		standart, err = ReadExcelColumn(standard)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		Calculated, err = ReadExcelColumn(calculated)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		pk, err = ReadExcelColumn(PK)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
 
-	wg.Wait()
-
-	for i := 0; i < len(groupNumber); i++ {
+	for i := 0; i < size; i++ {
 		wg.Add(1)
 		go func(i int) {
 			arg := Create_the_contingent_of_studentsParams{
@@ -492,46 +296,32 @@ func (q *Queries) ReadTheContingentOfStudents() (err error) {
 				Calculated:  Calculated[i],
 				PK:          pk[i],
 			}
-			_, err = q.Create_the_contingent_of_students(context.Background(), arg)
+			c, err := q.Create_the_contingent_of_students(context.Background(), arg)
 			if err != nil {
 				log.Fatalln(err)
 			}
+			lock.Lock()
+			m[i] = c.ID
+			lock.Unlock()
 			wg.Done()
 		}(i)
 
 	}
 	wg.Wait()
-	return
+	arr := fill(m)
+	return arr, err
 }
-func (q *Queries) ReadInformationAboutPps() (err error) {
-	var Department []string
-	var Post []string
-	var TermsOfAttraction []string
-	var FullName []string
-	var ASpecialFeature []string
+
+func (q *Queries) ReadInformationAboutPps(data [][]string) ([size]int32, error) {
+	var err error
+	lock := new(sync.Mutex)
+	m := make(map[int]int32)
+	Department := data[department]
+	Post := data[post]
+	TermsOfAttraction := data[terms_of_attraction]
+	FullName := data[full_name]
+	ASpecialFeature := data[a_special_feature]
 	var wg sync.WaitGroup
-	wg.Add(5)
-	go func() {
-		Department, err = ReadExcelColumn(department)
-		wg.Done()
-	}()
-	go func() {
-		Post, err = ReadExcelColumn(post)
-		wg.Done()
-	}()
-	go func() {
-		TermsOfAttraction, err = ReadExcelColumn(terms_of_attraction)
-		wg.Done()
-	}()
-	go func() {
-		FullName, err = ReadExcelColumn(full_name)
-		wg.Done()
-	}()
-	go func() {
-		ASpecialFeature, err = ReadExcelColumn(a_special_feature)
-		wg.Done()
-	}()
-	wg.Wait()
 	for i := 0; i < len(FullName); i++ {
 		wg.Add(1)
 		go func(i int) {
@@ -542,118 +332,47 @@ func (q *Queries) ReadInformationAboutPps() (err error) {
 				FullName:          FullName[i],
 				ASpecialFeature:   ASpecialFeature[i],
 			}
-			_, err = q.Create_information_about_PPS(context.Background(), arg)
+			c, err := q.Create_information_about_PPS(context.Background(), arg)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			lock.Lock()
+			m[i] = c.ID
+			lock.Unlock()
 			wg.Done()
 		}(i)
 	}
 	wg.Wait()
-	return
+	arr := fill(m)
+	return arr, err
 }
-func (q *Queries) ReadTheAmountOfTeachingWorkOfTheTeachingStaff() (err error) {
-	var Lectures []string
-	var PracticeOrSeminars []string
-	var LabWorksOrClinicalClasses []string
-	var CurrentControl []string
-	var InterimCertificationPoForBrs []string
-	var RegistrationOfPaResults []string
-	var OngoingConsultationsOnTheDiscipline []string
-	var CourseWorks []string
-	var CourseProjects []string
-	var EducationalPractice []string
-	var ProcPedagogicalAndPreGraduatePractices []string
-	var nir []string
-	var PracticesIncludingResearchOfDigitalMagistracies []string
-	var ReviewingTheAbstractsOfGraduateStudents []string
-	var CandidatesExam []string
-	var ScientificGuidance []string
-	var TheLeadershipOfTheWrcOrTheNkr []string
-	var ReviewOfTheWrc []string
-	var gek []string
-	var Total []string
+
+func (q *Queries) ReadTheAmountOfTeachingWorkOfTheTeachingStaff(data [][]string) ([size]int32, error) {
+	var err error
+	lock := new(sync.Mutex)
+	m := make(map[int]int32)
+	Lectures := data[lectures]
+	PracticeOrSeminars := data[practice_or_Seminars]
+	LabWorksOrClinicalClasses := data[Lab_works_or_Clinical_classes]
+	CurrentControl := data[current_control]
+	InterimCertificationPoForBrs := data[interim_certification_PO_for_BRS]
+	RegistrationOfPaResults := data[registration_of_PA_results]
+	OngoingConsultationsOnTheDiscipline := data[ongoing_consultations_on_the_discipline]
+	CourseWorks := data[courseWorks]
+	CourseProjects := data[courseProjects]
+	EducationalPractice := data[educational_practice]
+	ProcPedagogicalAndPreGraduatePractices := data[proc_pedagogical_and_pre_graduate_practices]
+	nir := data[NIR]
+	PracticesIncludingResearchOfDigitalMagistracies := data[practices_including_research_of_digital_magistracies]
+	ReviewingTheAbstractsOfGraduateStudents := data[reviewing_the_abstracts_of_graduate_students]
+	CandidatesExam := data[candidates_exam]
+	ScientificGuidance := data[scientific_guidance]
+	TheLeadershipOfTheWrcOrTheNkr := data[the_leadership_of_the_WRC_or_the_NKR]
+	ReviewOfTheWrc := data[review_of_the_WRC]
+	gek := data[GEK]
+	Total := data[total]
 	var wg sync.WaitGroup
-	wg.Add(20)
-	go func() {
-		Lectures, err = ReadExcelColumn(lectures)
-		wg.Done()
-	}()
-	go func() {
-		PracticeOrSeminars, err = ReadExcelColumn(practice_or_Seminars)
-		wg.Done()
-	}()
-	go func() {
-		LabWorksOrClinicalClasses, err = ReadExcelColumn(Lab_works_or_Clinical_classes)
-		wg.Done()
-	}()
-	go func() {
-		CurrentControl, err = ReadExcelColumn(current_control)
-		wg.Done()
-	}()
-	go func() {
-		InterimCertificationPoForBrs, err = ReadExcelColumn(interim_certification_PO_for_BRS)
-		wg.Done()
-	}()
-	go func() {
-		RegistrationOfPaResults, err = ReadExcelColumn(registration_of_PA_results)
-		wg.Done()
-	}()
-	go func() {
-		OngoingConsultationsOnTheDiscipline, err = ReadExcelColumn(ongoing_consultations_on_the_discipline)
-		wg.Done()
-	}()
-	go func() {
-		CourseWorks, err = ReadExcelColumn(courseWorks)
-		wg.Done()
-	}()
-	go func() {
-		CourseProjects, err = ReadExcelColumn(courseProjects)
-		wg.Done()
-	}()
-	go func() {
-		EducationalPractice, err = ReadExcelColumn(educational_practice)
-		wg.Done()
-	}()
-	go func() {
-		ProcPedagogicalAndPreGraduatePractices, err = ReadExcelColumn(proc_pedagogical_and_pre_graduate_practices)
-		wg.Done()
-	}()
-	go func() {
-		nir, err = ReadExcelColumn(NIR)
-		wg.Done()
-	}()
-	go func() {
-		PracticesIncludingResearchOfDigitalMagistracies, err = ReadExcelColumn(practices_including_research_of_digital_magistracies)
-		wg.Done()
-	}()
-	go func() {
-		ReviewingTheAbstractsOfGraduateStudents, err = ReadExcelColumn(reviewing_the_abstracts_of_graduate_students)
-		wg.Done()
-	}()
-	go func() {
-		CandidatesExam, err = ReadExcelColumn(candidates_exam)
-		wg.Done()
-	}()
-	go func() {
-		ScientificGuidance, err = ReadExcelColumn(scientific_guidance)
-		wg.Done()
-	}()
-	go func() {
-		TheLeadershipOfTheWrcOrTheNkr, err = ReadExcelColumn(the_leadership_of_the_WRC_or_the_NKR)
-		wg.Done()
-	}()
-	go func() {
-		ReviewOfTheWrc, err = ReadExcelColumn(review_of_the_WRC)
-		wg.Done()
-	}()
-	go func() {
-		gek, err = ReadExcelColumn(GEK)
-		wg.Done()
-	}()
-	go func() {
-		Total, err = ReadExcelColumn(total)
-		wg.Done()
-	}()
-	wg.Wait()
-	for i := 0; i < len(Lectures); i++ {
+	for i := 0; i < size; i++ {
 		wg.Add(1)
 		go func(i int) {
 			arg := Create_the_amount_of_teaching_work_of_the_teaching_staffParams{
@@ -678,64 +397,101 @@ func (q *Queries) ReadTheAmountOfTeachingWorkOfTheTeachingStaff() (err error) {
 				GEK:                                             gek[i],
 				Total:                                           Total[i],
 			}
-			_, err = q.Create_the_amount_of_teaching_work_of_the_teaching_staff(context.Background(), arg)
+
+			c, err := q.Create_the_amount_of_teaching_work_of_the_teaching_staff(context.Background(), arg)
+
 			if err != nil {
 				log.Fatalln(err)
 			}
+			lock.Lock()
+			m[i] = c.ID
+			lock.Unlock()
 			wg.Done()
 		}(i)
 
 	}
 	wg.Wait()
-	return
+	arr := fill(m)
+	return arr, err
 }
 
-func (q *Queries) MakeItAll() (err error) {
+func (q *Queries) ReadItAll() error {
+	var err error
+	data, err := ReadExcel()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Println("Всего прочитано элементов ", len(data)*end)
 	wg := new(sync.WaitGroup)
-	wg.Add(6)
+	var program [size]int32
+	var discipline [size]int32
+	var kw [size]int32
+	var group [size]int32
+	var pps [size]int32
+	var amount [size]int32
+	wg.Add(1)
 	go func() {
-		err = q.ReadEducationalProgram()
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		err = q.ReadDisciplineOrTypeOfAcademicWork()
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-		fmt.Println("Я всё")
-	}()
-	go func() {
-		err = q.ReadKW()
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		err = q.ReadTheContingentOfStudents()
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		err = q.ReadInformationAboutPps()
-		if err != nil {
-			log.Fatalln(err)
-		}
-		wg.Done()
-	}()
-	go func() {
-		err = q.ReadTheAmountOfTeachingWorkOfTheTeachingStaff()
-		if err != nil {
-			log.Fatalln(err)
-		}
+		wg.Add(6)
+		go func() {
+			program, err = q.ReadEducationalProgram(data)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			wg.Done()
+		}()
+		go func() {
+			discipline, err = q.ReadDisciplineOrTypeOfAcademicWork(data)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			wg.Done()
+		}()
+		go func() {
+			kw, err = q.ReadKW(data)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			wg.Done()
+		}()
+		go func() {
+			group, err = q.ReadTheContingentOfStudents(data)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			wg.Done()
+		}()
+		go func() {
+			pps, err = q.ReadInformationAboutPps(data)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			wg.Done()
+		}()
+		go func() {
+			amount, err = q.ReadTheAmountOfTeachingWorkOfTheTeachingStaff(data)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			wg.Done()
+		}()
 		wg.Done()
 	}()
 	wg.Wait()
-	return
+	for i := 0; i < size; i++ {
+		wg.Add(1)
+		go func(i int) {
+			arg := Create_togetherParams{
+				ProgramID:    program[i],
+				DisciplineID: discipline[i],
+				GroupID:      group[i],
+				TeacherID:    pps[i],
+				KWID:         kw[i],
+				AmountID:     amount[i],
+			}
+			_, err = q.Create_together(context.Background(), arg)
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+	return err
 }

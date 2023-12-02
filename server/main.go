@@ -2,15 +2,17 @@ package main
 
 import (
 	"context"
+	"fmt"
+	db "rudnWebApp/db/sqlc"
+	"rudnWebApp/util"
+	"time"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
-	"rudnWebApp/server/api"
-	db "rudnWebApp/server/db/sqlc"
-	configs "rudnWebApp/server/util"
 )
 
 func main() {
-	config, err := configs.InitConfig("C:\\Users\\Oleg\\GolandProjects\\rudnWebApp\\server/")
+	config, err := util.InitConfig(".")
 	if err != nil {
 		log.Fatalf("cannot load config")
 	}
@@ -19,20 +21,19 @@ func main() {
 		log.Fatalf("cannot connect to db")
 	}
 	store := db.NewStore(connPool)
-	serv, err := api.NewServer(config, store)
+	now := time.Now()
+	err = store.ReadItAll()
 	if err != nil {
-		log.Fatalln("cannot create api : ", err)
+		log.Fatalln(err)
 	}
-	err = serv.Start(config.ServerAddress)
-	if err != nil {
-		log.Fatalln("cannot start api : ", err)
-	}
-	//now := time.Now()
-	//err = store.MakeItAll()
+	fmt.Println(time.Since(now))
+	//serv, err := api.NewServer(config, store)
 	//if err != nil {
-	//	log.Fatalln(" пизда : ", err)
+	//	log.Fatalln("cannot create api : ", err)
 	//}
-	//dur := time.Since(now)
-	//fmt.Println(dur)
+	//err = serv.Start(config.ServerAddress)
+	//if err != nil {
+	//	log.Fatalln("cannot start api : ", err)
+	//}
 
 }

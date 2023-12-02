@@ -104,6 +104,7 @@ func (q *Queries) Create_the_amount_of_teaching_work_of_the_teaching_staff(ctx c
 		&i.GEK,
 		&i.Total,
 	)
+
 	return i, err
 }
 

@@ -6,6 +6,11 @@ package db
 
 import ()
 
+type DisciplineGroup struct {
+	DisciplineName string `json:"discipline_name"`
+	GroupName      string `json:"group_name"`
+}
+
 type DisciplineOrTypeOfAcademicWork struct {
 	ID                                      int32  `json:"id"`
 	Block                                   string `json:"block"`
@@ -20,6 +25,17 @@ type EducationalProgram struct {
 	TheCodeOfTheOOPRUDN string `json:"the_code_of_the_OOP_RUDN"`
 	DirectionCode       string `json:"direction_code"`
 	NameOfTheProgram    string `json:"name_of_the_program"`
+}
+
+type GroupHoursDiscipline struct {
+	DiscplineName string `json:"discpline_name"`
+	GroupName     string `json:"group_name"`
+	AmountID      int32  `json:"amount_id"`
+}
+
+type GroupKw struct {
+	KwID      int32  `json:"kw_id"`
+	GroupName string `json:"group_name"`
 }
 
 type InformationAboutPP struct {
@@ -45,6 +61,16 @@ type KW struct {
 	CourseUchAveZEOnRUP    string `json:"course_Uch_ave_ZE_on_RUP"`
 	PrZEOnRUP              string `json:"pr_ZE_on_RUP"`
 	NIRZEByRUP             string `json:"NIR_ZE_by_RUP"`
+}
+
+type ProgramGroup struct {
+	NameOfTheProgram string `json:"name_of_the_program"`
+	GroupName        string `json:"group_name"`
+}
+
+type TeacherGroup struct {
+	TeacherName string `json:"teacher_name"`
+	GroupName   string `json:"group_name"`
 }
 
 type TheAmountOfTeachingWorkOfTheTeachingStaff struct {
@@ -73,6 +99,7 @@ type TheAmountOfTeachingWorkOfTheTeachingStaff struct {
 
 type TheContingentOfStudent struct {
 	ID          int32  `json:"id"`
+	GroupName   string `json:"group_name"`
 	Code        string `json:"code"`
 	GroupNumber string `json:"group_number"`
 	OfGroups    string `json:"of_groups"`
@@ -83,4 +110,13 @@ type TheContingentOfStudent struct {
 	Standard    string `json:"standard"`
 	Calculated  string `json:"calculated"`
 	PK          string `json:"PK"`
+}
+
+type Together struct {
+	ProgramID    int32 `json:"program_id"`
+	DisciplineID int32 `json:"discipline_id"`
+	TeacherID    int32 `json:"teacher_id"`
+	GroupID      int32 `json:"group_id"`
+	KWID         int32 `json:"k_w_id"`
+	AmountID     int32 `json:"amount_id"`
 }

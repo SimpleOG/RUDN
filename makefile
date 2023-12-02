@@ -3,7 +3,7 @@ createmigration:
 image:
 	docker pull postgres:12-alpine
 postgres:
-	docker run --name postgres -p 5440:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=1234 -d postgres:12-alpine
+	docker run --name postgres  --network network -p 5440:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=1234 -d postgres:12-alpine
 createdb:
 	docker exec -it postgres createdb --username=root --owner=root education
 dropdb:
@@ -28,7 +28,16 @@ server:
 	cd server && go run main.go
 client:
 	cd client && npm start
-
+start_serv:
+	docker start server
+runserv:
+	cd server && docker run --name server --network network -p 8080:8080 -e DB_SOURCE="postgresql://root:1234@postgres:5440/test_education?sslmode=disable" server
+dockbuild:
+	cd server && docker build -t server:latest .
 test:
 	go test -v -cover ./db/tests
-.PHONY: server client createmigration  createdb createdbtest  postgres createdb dropdb mgu1 mgd1 dbtest dropdbtest mgu2 mgd2 sqlc image test start_post
+network:
+	docker network create network
+connect:
+
+.PHONY: start_serv  dockbuild runserv server client createmigration  createdb createdbtest  postgres createdb dropdb mgu1 mgd1 dbtest dropdbtest mgu2 mgd2 sqlc image test start_post

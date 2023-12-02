@@ -1,5 +1,6 @@
 -- name: Create_the_contingent_of_students :one
 INSERT INTO "the_contingent_of_students" (
+              "group_name",
               "code"         ,
               "group_number" ,
               "of_groups"    ,
@@ -10,7 +11,8 @@ INSERT INTO "the_contingent_of_students" (
               "standard"     ,
               "calculated" ,
               "PK")
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+VALUES ('',$1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+--	i.GroupName=strings.ToLower(i.GroupName+i.Code)
 RETURNING *;
 
 -- name: Get_the_contingent_of_students :one

@@ -35,26 +35,26 @@ VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $
 `
 
 type Create_the_amount_of_teaching_work_of_the_teaching_staffParams struct {
-	Lectures                                        string `json:"lectures"`
-	PracticeOrSeminars                              string `json:"practice_or_Seminars"`
-	LabWorksOrClinicalClasses                       string `json:"Lab_works_or_Clinical_classes"`
-	CurrentControl                                  string `json:"current_control"`
-	InterimCertificationPOForBRS                    string `json:"interim_certification_PO_for_BRS"`
-	RegistrationOfPAResults                         string `json:"registration_of_PA_results"`
-	OngoingConsultationsOnTheDiscipline             string `json:"ongoing_consultations_on_the_discipline"`
-	CourseWorks                                     string `json:"course_works"`
-	CourseProjects                                  string `json:"course_projects"`
-	EducationalPractice                             string `json:"educational_practice"`
-	ProcPedagogicalAndPreGraduatePractices          string `json:"proc_pedagogical_and_pre_graduate_practices"`
-	NIR                                             string `json:"NIR"`
-	PracticesIncludingResearchOfDigitalMagistracies string `json:"practices_including_research_of_digital_magistracies"`
-	ReviewingTheAbstractsOfGraduateStudents         string `json:"reviewing_the_abstracts_of_graduate_students"`
-	CandidatesExam                                  string `json:"candidates_exam"`
-	ScientificGuidance                              string `json:"scientific_guidance"`
-	TheLeadershipOfTheWRCOrTheNKR                   string `json:"the_leadership_of_the_WRC_or_the_NKR"`
-	ReviewOfTheWRC                                  string `json:"review_of_the_WRC"`
-	GEK                                             string `json:"GEK"`
-	Total                                           string `json:"total"`
+	Lectures                                        float64 `json:"lectures"`
+	PracticeOrSeminars                              float64 `json:"practice_or_Seminars"`
+	LabWorksOrClinicalClasses                       float64 `json:"Lab_works_or_Clinical_classes"`
+	CurrentControl                                  float64 `json:"current_control"`
+	InterimCertificationPOForBRS                    float64 `json:"interim_certification_PO_for_BRS"`
+	RegistrationOfPAResults                         float64 `json:"registration_of_PA_results"`
+	OngoingConsultationsOnTheDiscipline             float64 `json:"ongoing_consultations_on_the_discipline"`
+	CourseWorks                                     float64 `json:"course_works"`
+	CourseProjects                                  float64 `json:"course_projects"`
+	EducationalPractice                             float64 `json:"educational_practice"`
+	ProcPedagogicalAndPreGraduatePractices          float64 `json:"proc_pedagogical_and_pre_graduate_practices"`
+	NIR                                             float64 `json:"NIR"`
+	PracticesIncludingResearchOfDigitalMagistracies float64 `json:"practices_including_research_of_digital_magistracies"`
+	ReviewingTheAbstractsOfGraduateStudents         float64 `json:"reviewing_the_abstracts_of_graduate_students"`
+	CandidatesExam                                  float64 `json:"candidates_exam"`
+	ScientificGuidance                              float64 `json:"scientific_guidance"`
+	TheLeadershipOfTheWRCOrTheNKR                   float64 `json:"the_leadership_of_the_WRC_or_the_NKR"`
+	ReviewOfTheWRC                                  float64 `json:"review_of_the_WRC"`
+	GEK                                             float64 `json:"GEK"`
+	Total                                           float64 `json:"total"`
 }
 
 func (q *Queries) Create_the_amount_of_teaching_work_of_the_teaching_staff(ctx context.Context, arg Create_the_amount_of_teaching_work_of_the_teaching_staffParams) (TheAmountOfTeachingWorkOfTheTeachingStaff, error) {
@@ -104,7 +104,6 @@ func (q *Queries) Create_the_amount_of_teaching_work_of_the_teaching_staff(ctx c
 		&i.GEK,
 		&i.Total,
 	)
-
 	return i, err
 }
 

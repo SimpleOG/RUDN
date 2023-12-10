@@ -3,12 +3,8 @@ import Table from "../table/table";
 
 const TeachersTable = ({ teachers }) => {
     const teacherColumns = {
-        id: {
-            name: "ID",
-            path: "id"
-        },
         full_name: {
-            name: "Имя",
+            name: "Преподаватель",
             path: "full_name"
         },
         department: {
@@ -19,10 +15,10 @@ const TeachersTable = ({ teachers }) => {
             name: "Должность",
             path: "post"
         },
-        conditions: {
-            name: "Наём",
-            path: "conditions"
-        }
+        terms_of_attraction: {
+            name: "Условия привлечения",
+            path: "terms_of_attraction"
+        },
     }
 
     return (

@@ -2,13 +2,11 @@ package main
 
 import (
 	"context"
-	"fmt"
-	db "rudnWebApp/db/sqlc"
-	"rudnWebApp/util"
-	"time"
-
 	"github.com/jackc/pgx/v5/pgxpool"
 	"log"
+	"rudnWebApp/api"
+	db "rudnWebApp/db/sqlc"
+	"rudnWebApp/util"
 )
 
 func main() {
@@ -21,19 +19,14 @@ func main() {
 		log.Fatalf("cannot connect to db")
 	}
 	store := db.NewStore(connPool)
-	now := time.Now()
-	err = store.ReadItAll()
+
+	serv, err := api.NewServer(config, store)
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("cannot create api : ", err)
 	}
-	fmt.Println(time.Since(now))
-	//serv, err := api.NewServer(config, store)
-	//if err != nil {
-	//	log.Fatalln("cannot create api : ", err)
-	//}
-	//err = serv.Start(config.ServerAddress)
-	//if err != nil {
-	//	log.Fatalln("cannot start api : ", err)
-	//}
+	err = serv.Start(config.ServerAddress)
+	if err != nil {
+		log.Fatalln("cannot start api : ", err)
+	}
 
 }

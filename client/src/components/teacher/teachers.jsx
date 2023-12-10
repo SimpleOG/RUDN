@@ -22,12 +22,14 @@ const Teachers = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetch("http://localhost:8080/all_teachers");
+            console.log("хуй");
+            const data = await fetch("http://localhost:8080/teachers");
             const response = await data.json()
             setTeachers(response);
-
-            teacherColumns = getFields(response[0]);
+            response.info
+            teacherColumns = getFields(response);
             console.log(teacherColumns);
+
 
         }
 

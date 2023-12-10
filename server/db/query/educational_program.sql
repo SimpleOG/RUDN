@@ -9,7 +9,7 @@ RETURNING *;
 -- name: Get_EducationalProgram :one
 SELECT *
 FROM educational_program
-WHERE "name_of_the_program" = $1
+WHERE "id" = $1
 LIMIT 1;
 
 

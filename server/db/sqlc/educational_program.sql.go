@@ -39,12 +39,12 @@ func (q *Queries) Create_EducationalProgram(ctx context.Context, arg Create_Educ
 const get_EducationalProgram = `-- name: Get_EducationalProgram :one
 SELECT id, "the_code_of_the_OOP_RUDN", direction_code, name_of_the_program
 FROM educational_program
-WHERE "name_of_the_program" = $1
+WHERE "id" = $1
 LIMIT 1
 `
 
-func (q *Queries) Get_EducationalProgram(ctx context.Context, nameOfTheProgram string) (EducationalProgram, error) {
-	row := q.db.QueryRow(ctx, get_EducationalProgram, nameOfTheProgram)
+func (q *Queries) Get_EducationalProgram(ctx context.Context, id int32) (EducationalProgram, error) {
+	row := q.db.QueryRow(ctx, get_EducationalProgram, id)
 	var i EducationalProgram
 	err := row.Scan(
 		&i.ID,

@@ -17,6 +17,6 @@ RETURNING *;
 -- name: Get_k_w :one
 SELECT *
 FROM k_w
-WHERE "type_of_educational_work" = $1
+WHERE "id" = $1
 LIMIT 1;
 

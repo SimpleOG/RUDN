@@ -47,23 +47,38 @@ func (q *Queries) Create_information_about_PPS(ctx context.Context, arg Create_i
 	return i, err
 }
 
-const get_information_about_PPS = `-- name: Get_information_about_PPS :one
-SELECT id, department, post, terms_of_attraction, full_name, a_special_feature
-FROM "information_about_PPS"
-WHERE full_name = $1
-LIMIT 1
+const get_information_about_PPS = `-- name: Get_information_about_PPS :many
+select distinct full_name ,department,post,terms_of_attraction from "information_about_PPS"
 `
 
-func (q *Queries) Get_information_about_PPS(ctx context.Context, fullName string) (InformationAboutPP, error) {
-	row := q.db.QueryRow(ctx, get_information_about_PPS, fullName)
-	var i InformationAboutPP
-	err := row.Scan(
-		&i.ID,
-		&i.Department,
-		&i.Post,
-		&i.TermsOfAttraction,
-		&i.FullName,
-		&i.ASpecialFeature,
-	)
-	return i, err
+type Get_information_about_PPSRow struct {
+	FullName          string `json:"full_name"`
+	Department        string `json:"department"`
+	Post              string `json:"post"`
+	TermsOfAttraction string `json:"terms_of_attraction"`
+}
+
+func (q *Queries) Get_information_about_PPS(ctx context.Context) ([]Get_information_about_PPSRow, error) {
+	rows, err := q.db.Query(ctx, get_information_about_PPS)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Get_information_about_PPSRow{}
+	for rows.Next() {
+		var i Get_information_about_PPSRow
+		if err := rows.Scan(
+			&i.FullName,
+			&i.Department,
+			&i.Post,
+			&i.TermsOfAttraction,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

@@ -11,7 +11,7 @@ RETURNING *;
 -- name: Get_Discipline_or_type_of_academic_work :one
 SELECT *
 FROM "discipline_or_type_of_academic_work"
-WHERE "name_of_the_discipline_or_type_of_academic_work" = $1
+WHERE "id" = $1
 LIMIT 1;
 
 

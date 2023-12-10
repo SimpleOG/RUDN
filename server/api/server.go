@@ -2,8 +2,9 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"log"
-	db "rudnWebApp/db/sqlc"
+	"net/http"
+	"os"
+	"rudnWebApp/db/sqlc"
 	configs "rudnWebApp/util"
 )
 
@@ -25,13 +26,7 @@ func NewServer(config configs.Config, store db.Store) (*Server, error) {
 	server.setupRouter()
 	return server, nil
 }
-func (s *Server) home(ctx *gin.Context) {
-	data, err := s.store.Get_EducationalProgram(ctx, "Прикладная информатика")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	ctx.JSON(200, gin.H{"data": data})
-}
+
 func (s *Server) setupRouter() {
 	router := gin.Default()
 	//настройка роутов
@@ -40,10 +35,39 @@ func (s *Server) setupRouter() {
 			ctx.Header("Access-Control-Allow-Origin", "*")
 		}
 	}())
-	router.GET("/home", s.home)
+	router.GET("/teacher/:name", s.TeacherHours)
+	router.GET("/download/:path", s.Download)
+	router.GET("/hello", s.SayHello)
+	router.GET("/course", s.GetCourseInfo)
+	router.GET("/teachers", s.GetTeachers)
 	s.router = router
+	gin.SetMode(gin.ReleaseMode)
 }
 
 func (s *Server) Start(address string) error {
 	return s.router.Run(address)
+}
+
+func (s *Server) SayHello(ctx *gin.Context) {
+	ctx.JSON(200, "Привет")
+}
+func (s *Server) Download(ctx *gin.Context) {
+	filePath := ctx.Param("path") // Путь к файлу, который вы хотите скачать
+	// Открываем файл
+	file, err := os.Open(filePath)
+	if err != nil {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	defer file.Close()
+
+	// Устанавливаем заголовки для скачивания файла
+	ctx.Header("Content-Description", "File Transfer")
+	ctx.Header("Content-Disposition", "attachment; filename=your_file.txt")
+	ctx.Header("Content-Type", "application/octet-stream")
+	ctx.Header("Content-Transfer-Encoding", "binary")
+	ctx.Header("Expires", "0")
+
+	// Копируем содержимое файла в ответ
+	ctx.FileAttachment(filePath, "your_file.txt")
 }

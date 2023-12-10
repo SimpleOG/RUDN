@@ -11,14 +11,14 @@ INSERT INTO "the_contingent_of_students" (
               "standard"     ,
               "calculated" ,
               "PK")
-VALUES ('',$1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11)
 --	i.GroupName=strings.ToLower(i.GroupName+i.Code)
-RETURNING *;
+RETURNING *  ;
 
 -- name: Get_the_contingent_of_students :one
 SELECT *
 FROM the_contingent_of_students
-WHERE "group_number" = $1
+WHERE "id" = $1
 LIMIT 1;
 
 

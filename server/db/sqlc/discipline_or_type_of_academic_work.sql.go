@@ -17,7 +17,7 @@ INSERT INTO "discipline_or_type_of_academic_work" (
                "name_of_the_discipline_or_type_of_academic_work",
                "dop_info")
 VALUES ($1, $2, $3, $4,$5)
-RETURNING id, block, component, "n_v_RUP", name_of_the_discipline_or_type_of_academic_work, dop_info
+RETURNING id, block, component, "n_v_RUP", dop_info, name_of_the_discipline_or_type_of_academic_work
 `
 
 type Create_Discipline_or_type_of_academic_workParams struct {
@@ -42,29 +42,29 @@ func (q *Queries) Create_Discipline_or_type_of_academic_work(ctx context.Context
 		&i.Block,
 		&i.Component,
 		&i.NVRUP,
-		&i.NameOfTheDisciplineOrTypeOfAcademicWork,
 		&i.DopInfo,
+		&i.NameOfTheDisciplineOrTypeOfAcademicWork,
 	)
 	return i, err
 }
 
 const get_Discipline_or_type_of_academic_work = `-- name: Get_Discipline_or_type_of_academic_work :one
-SELECT id, block, component, "n_v_RUP", name_of_the_discipline_or_type_of_academic_work, dop_info
+SELECT id, block, component, "n_v_RUP", dop_info, name_of_the_discipline_or_type_of_academic_work
 FROM "discipline_or_type_of_academic_work"
-WHERE "name_of_the_discipline_or_type_of_academic_work" = $1
+WHERE "id" = $1
 LIMIT 1
 `
 
-func (q *Queries) Get_Discipline_or_type_of_academic_work(ctx context.Context, nameOfTheDisciplineOrTypeOfAcademicWork string) (DisciplineOrTypeOfAcademicWork, error) {
-	row := q.db.QueryRow(ctx, get_Discipline_or_type_of_academic_work, nameOfTheDisciplineOrTypeOfAcademicWork)
+func (q *Queries) Get_Discipline_or_type_of_academic_work(ctx context.Context, id int32) (DisciplineOrTypeOfAcademicWork, error) {
+	row := q.db.QueryRow(ctx, get_Discipline_or_type_of_academic_work, id)
 	var i DisciplineOrTypeOfAcademicWork
 	err := row.Scan(
 		&i.ID,
 		&i.Block,
 		&i.Component,
 		&i.NVRUP,
-		&i.NameOfTheDisciplineOrTypeOfAcademicWork,
 		&i.DopInfo,
+		&i.NameOfTheDisciplineOrTypeOfAcademicWork,
 	)
 	return i, err
 }

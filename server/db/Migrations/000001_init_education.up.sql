@@ -64,31 +64,39 @@ CREATE TABLE "k_w"
 CREATE TABLE "the_amount_of_teaching_work_of_the_teaching_staff"
 (
     id                                                     serial  not null primary key,
-    "lectures"                                             varchar not null,
-    "practice_or_Seminars"                                 varchar not null,
-    "Lab_works_or_Clinical_classes"                        varchar not null,
-    "current_control"                                      varchar not null,
-    "interim_certification_PO_for_BRS"                     varchar not null,
-    "registration_of_PA_results"                           varchar not null,
-    "ongoing_consultations_on_the_discipline"              varchar not null,
-    "course_works"                                         varchar not null,
-    "course_projects"                                      varchar not null,
-    "educational_practice"                                 varchar not null,
-    "proc_pedagogical_and_pre_graduate_practices"          varchar not null,
-    "NIR"                                                  varchar not null,
-    "practices_including_research_of_digital_magistracies" varchar not null,
-    "reviewing_the_abstracts_of_graduate_students"         varchar not null,
-    "candidates_exam"                                      varchar not null,
-    "scientific_guidance"                                  varchar not null,
-    "the_leadership_of_the_WRC_or_the_NKR"                 varchar not null,
-    "review_of_the_WRC"                                    varchar not null,
-    "GEK"                                                  varchar not null,
-    "total"                                                varchar not null
+    "lectures"                                             float not null,
+    "practice_or_Seminars"                                 float not null,
+    "Lab_works_or_Clinical_classes"                        float not null,
+    "current_control"                                      float not null,
+    "interim_certification_PO_for_BRS"                     float not null,
+    "registration_of_PA_results"                           float not null,
+    "ongoing_consultations_on_the_discipline"              float not null,
+    "course_works"                                         float not null,
+    "course_projects"                                      float not null,
+    "educational_practice"                                 float not null,
+    "proc_pedagogical_and_pre_graduate_practices"          float not null,
+    "NIR"                                                  float not null,
+    "practices_including_research_of_digital_magistracies" float not null,
+    "reviewing_the_abstracts_of_graduate_students"         float not null,
+    "candidates_exam"                                      float not null,
+    "scientific_guidance"                                  float not null,
+    "the_leadership_of_the_WRC_or_the_NKR"                 float not null,
+    "review_of_the_WRC"                                    float not null,
+    "GEK"                                                  float not null,
+    "total"                                                float not null
 
 );
 
+CREATE TABLE together
+(
+    program_name    varchar not null,
+    discipline_name varchar not null,
+    teacher_name    varchar not null,
+    group_name      varchar not null,
+    k_w_id          integer not null,
+    amount_id     integer not null
 
-
+);
 
 
 

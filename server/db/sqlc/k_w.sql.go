@@ -78,12 +78,12 @@ func (q *Queries) Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, err
 const get_k_w = `-- name: Get_k_w :one
 SELECT id, "semester_or_Module", weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, "type_of_PA_or_GIA", course_works, course_projects, "course_Uch_ave_ZE_on_RUP", "pr_ZE_on_RUP", "NIR_ZE_by_RUP"
 FROM k_w
-WHERE "type_of_educational_work" = $1
+WHERE "id" = $1
 LIMIT 1
 `
 
-func (q *Queries) Get_k_w(ctx context.Context, typeOfEducationalWork string) (KW, error) {
-	row := q.db.QueryRow(ctx, get_k_w, typeOfEducationalWork)
+func (q *Queries) Get_k_w(ctx context.Context, id int32) (KW, error) {
+	row := q.db.QueryRow(ctx, get_k_w, id)
 	var i KW
 	err := row.Scan(
 		&i.ID,

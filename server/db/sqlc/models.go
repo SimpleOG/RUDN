@@ -6,18 +6,13 @@ package db
 
 import ()
 
-type DisciplineGroup struct {
-	DisciplineName string `json:"discipline_name"`
-	GroupName      string `json:"group_name"`
-}
-
 type DisciplineOrTypeOfAcademicWork struct {
 	ID                                      int32  `json:"id"`
 	Block                                   string `json:"block"`
 	Component                               string `json:"component"`
 	NVRUP                                   string `json:"n_v_RUP"`
-	NameOfTheDisciplineOrTypeOfAcademicWork string `json:"name_of_the_discipline_or_type_of_academic_work"`
 	DopInfo                                 string `json:"dop_info"`
+	NameOfTheDisciplineOrTypeOfAcademicWork string `json:"name_of_the_discipline_or_type_of_academic_work"`
 }
 
 type EducationalProgram struct {
@@ -25,17 +20,6 @@ type EducationalProgram struct {
 	TheCodeOfTheOOPRUDN string `json:"the_code_of_the_OOP_RUDN"`
 	DirectionCode       string `json:"direction_code"`
 	NameOfTheProgram    string `json:"name_of_the_program"`
-}
-
-type GroupHoursDiscipline struct {
-	DiscplineName string `json:"discpline_name"`
-	GroupName     string `json:"group_name"`
-	AmountID      int32  `json:"amount_id"`
-}
-
-type GroupKw struct {
-	KwID      int32  `json:"kw_id"`
-	GroupName string `json:"group_name"`
 }
 
 type InformationAboutPP struct {
@@ -63,38 +47,28 @@ type KW struct {
 	NIRZEByRUP             string `json:"NIR_ZE_by_RUP"`
 }
 
-type ProgramGroup struct {
-	NameOfTheProgram string `json:"name_of_the_program"`
-	GroupName        string `json:"group_name"`
-}
-
-type TeacherGroup struct {
-	TeacherName string `json:"teacher_name"`
-	GroupName   string `json:"group_name"`
-}
-
 type TheAmountOfTeachingWorkOfTheTeachingStaff struct {
-	ID                                              int32  `json:"id"`
-	Lectures                                        string `json:"lectures"`
-	PracticeOrSeminars                              string `json:"practice_or_Seminars"`
-	LabWorksOrClinicalClasses                       string `json:"Lab_works_or_Clinical_classes"`
-	CurrentControl                                  string `json:"current_control"`
-	InterimCertificationPOForBRS                    string `json:"interim_certification_PO_for_BRS"`
-	RegistrationOfPAResults                         string `json:"registration_of_PA_results"`
-	OngoingConsultationsOnTheDiscipline             string `json:"ongoing_consultations_on_the_discipline"`
-	CourseWorks                                     string `json:"course_works"`
-	CourseProjects                                  string `json:"course_projects"`
-	EducationalPractice                             string `json:"educational_practice"`
-	ProcPedagogicalAndPreGraduatePractices          string `json:"proc_pedagogical_and_pre_graduate_practices"`
-	NIR                                             string `json:"NIR"`
-	PracticesIncludingResearchOfDigitalMagistracies string `json:"practices_including_research_of_digital_magistracies"`
-	ReviewingTheAbstractsOfGraduateStudents         string `json:"reviewing_the_abstracts_of_graduate_students"`
-	CandidatesExam                                  string `json:"candidates_exam"`
-	ScientificGuidance                              string `json:"scientific_guidance"`
-	TheLeadershipOfTheWRCOrTheNKR                   string `json:"the_leadership_of_the_WRC_or_the_NKR"`
-	ReviewOfTheWRC                                  string `json:"review_of_the_WRC"`
-	GEK                                             string `json:"GEK"`
-	Total                                           string `json:"total"`
+	ID                                              int32   `json:"id"`
+	Lectures                                        float64 `json:"lectures"`
+	PracticeOrSeminars                              float64 `json:"practice_or_Seminars"`
+	LabWorksOrClinicalClasses                       float64 `json:"Lab_works_or_Clinical_classes"`
+	CurrentControl                                  float64 `json:"current_control"`
+	InterimCertificationPOForBRS                    float64 `json:"interim_certification_PO_for_BRS"`
+	RegistrationOfPAResults                         float64 `json:"registration_of_PA_results"`
+	OngoingConsultationsOnTheDiscipline             float64 `json:"ongoing_consultations_on_the_discipline"`
+	CourseWorks                                     float64 `json:"course_works"`
+	CourseProjects                                  float64 `json:"course_projects"`
+	EducationalPractice                             float64 `json:"educational_practice"`
+	ProcPedagogicalAndPreGraduatePractices          float64 `json:"proc_pedagogical_and_pre_graduate_practices"`
+	NIR                                             float64 `json:"NIR"`
+	PracticesIncludingResearchOfDigitalMagistracies float64 `json:"practices_including_research_of_digital_magistracies"`
+	ReviewingTheAbstractsOfGraduateStudents         float64 `json:"reviewing_the_abstracts_of_graduate_students"`
+	CandidatesExam                                  float64 `json:"candidates_exam"`
+	ScientificGuidance                              float64 `json:"scientific_guidance"`
+	TheLeadershipOfTheWRCOrTheNKR                   float64 `json:"the_leadership_of_the_WRC_or_the_NKR"`
+	ReviewOfTheWRC                                  float64 `json:"review_of_the_WRC"`
+	GEK                                             float64 `json:"GEK"`
+	Total                                           float64 `json:"total"`
 }
 
 type TheContingentOfStudent struct {
@@ -113,10 +87,10 @@ type TheContingentOfStudent struct {
 }
 
 type Together struct {
-	ProgramID    int32 `json:"program_id"`
-	DisciplineID int32 `json:"discipline_id"`
-	TeacherID    int32 `json:"teacher_id"`
-	GroupID      int32 `json:"group_id"`
-	KWID         int32 `json:"k_w_id"`
-	AmountID     int32 `json:"amount_id"`
+	ProgramName    string `json:"program_name"`
+	DisciplineName string `json:"discipline_name"`
+	TeacherName    string `json:"teacher_name"`
+	GroupName      string `json:"group_name"`
+	KWID           int32  `json:"k_w_id"`
+	AmountID       int32  `json:"amount_id"`
 }

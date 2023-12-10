@@ -74,7 +74,7 @@ const (
 	GEK
 	total
 	start = 5
-	end   = 1600
+	end   = 1645
 	size  = end - start
 )
 
@@ -100,17 +100,10 @@ func ReadExcel() ([][]string, error) {
 }
 
 // подтянем из экселя все штуки( шучу, не все)
-func fill(m map[int]int32) [size]int32 {
-	var arr [size]int32
-	for i, v := range m {
-		arr[i] = v
-	}
-	return arr
-}
 
-func (q *Queries) ReadEducationalProgram(data [][]string) ([size]int32, error) {
+func (q *Queries) ReadEducationalProgram(data [][]string) ([size]EducationalProgram, error) {
 	lock := new(sync.Mutex)
-	m := make(map[int]int32)
+	m := make(map[int]EducationalProgram)
 	theCodeOfTheOOPRUDN := data[theCodeOfTheOopRudn]
 	directionCode := data[direction_code]
 	nameOfTheProgram := data[name_of_the_program]
@@ -131,21 +124,24 @@ func (q *Queries) ReadEducationalProgram(data [][]string) ([size]int32, error) {
 				log.Fatalln(err)
 			}
 			lock.Lock()
-			m[i] = n.ID
+			m[i] = n
 			lock.Unlock()
 			wg.Done()
 		}(i)
 
 	}
 	wg.Wait()
-	arr := fill(m)
+	var arr [1640]EducationalProgram
+	for i, v := range m {
+		arr[i] = v
+	}
 	return arr, nil
 }
 
-func (q *Queries) ReadDisciplineOrTypeOfAcademicWork(data [][]string) ([size]int32, error) {
+func (q *Queries) ReadDisciplineOrTypeOfAcademicWork(data [][]string) ([size]DisciplineOrTypeOfAcademicWork, error) {
 	var err error
 	lock := new(sync.Mutex)
-	m := make(map[int]int32)
+	m := make(map[int]DisciplineOrTypeOfAcademicWork)
 	Block := data[block]
 	Component := data[component]
 	Nvrup := data[n_v_RUP]
@@ -167,20 +163,23 @@ func (q *Queries) ReadDisciplineOrTypeOfAcademicWork(data [][]string) ([size]int
 				log.Fatalln(err)
 			}
 			lock.Lock()
-			m[i] = c.ID
+			m[i] = c
 			lock.Unlock()
 			wg.Done()
 		}(i)
 	}
 	wg.Wait()
-	arr := fill(m)
+	var arr [1640]DisciplineOrTypeOfAcademicWork
+	for i, v := range m {
+		arr[i] = v
+	}
 	return arr, err
 }
 
-func (q *Queries) ReadKW(data [][]string) ([size]int32, error) {
+func (q *Queries) ReadKW(data [][]string) ([size]KW, error) {
 	var err error
 	lock := new(sync.Mutex)
-	m := make(map[int]int32)
+	m := make(map[int]KW)
 	SemesterOrModule := data[semester_or_Module]
 	WeeksPerSemesterModule := data[weeks_per_semester_module]
 	TypeOfEducationalWork := data[type_of_educational_work]
@@ -251,7 +250,7 @@ func (q *Queries) ReadKW(data [][]string) ([size]int32, error) {
 			}
 			c, err := q.Create_k_w(context.Background(), arg)
 			lock.Lock()
-			m[i] = c.ID
+			m[i] = c
 			lock.Unlock()
 			if err != nil {
 				log.Fatalln(err)
@@ -261,14 +260,17 @@ func (q *Queries) ReadKW(data [][]string) ([size]int32, error) {
 
 	}
 	wg.Wait()
-	arr := fill(m)
+	var arr [size]KW
+	for i, v := range m {
+		arr[i] = v
+	}
 	return arr, err
 }
 
-func (q *Queries) ReadTheContingentOfStudents(data [][]string) ([size]int32, error) {
+func (q *Queries) ReadTheContingentOfStudents(data [][]string) ([size]TheContingentOfStudent, error) {
 	var err error
 	lock := new(sync.Mutex)
-	m := make(map[int]int32)
+	m := make(map[int]TheContingentOfStudent)
 	Code := data[code]
 	groupNumber := data[group_number]
 	ofGroups := data[of_groups]
@@ -286,6 +288,7 @@ func (q *Queries) ReadTheContingentOfStudents(data [][]string) ([size]int32, err
 		go func(i int) {
 			arg := Create_the_contingent_of_studentsParams{
 				Code:        Code[i],
+				GroupName:   Code[i] + groupNumber[i],
 				GroupNumber: groupNumber[i],
 				OfGroups:    ofGroups[i],
 				Subgroups:   Subgroups[i],
@@ -301,21 +304,24 @@ func (q *Queries) ReadTheContingentOfStudents(data [][]string) ([size]int32, err
 				log.Fatalln(err)
 			}
 			lock.Lock()
-			m[i] = c.ID
+			m[i] = c
 			lock.Unlock()
 			wg.Done()
 		}(i)
 
 	}
 	wg.Wait()
-	arr := fill(m)
+	var arr [size]TheContingentOfStudent
+	for i, v := range m {
+		arr[i] = v
+	}
 	return arr, err
 }
 
-func (q *Queries) ReadInformationAboutPps(data [][]string) ([size]int32, error) {
+func (q *Queries) ReadInformationAboutPps(data [][]string) ([size]InformationAboutPP, error) {
 	var err error
 	lock := new(sync.Mutex)
-	m := make(map[int]int32)
+	m := make(map[int]InformationAboutPP)
 	Department := data[department]
 	Post := data[post]
 	TermsOfAttraction := data[terms_of_attraction]
@@ -337,20 +343,23 @@ func (q *Queries) ReadInformationAboutPps(data [][]string) ([size]int32, error) 
 				log.Fatalln(err)
 			}
 			lock.Lock()
-			m[i] = c.ID
+			m[i] = c
 			lock.Unlock()
 			wg.Done()
 		}(i)
 	}
 	wg.Wait()
-	arr := fill(m)
+	var arr [size]InformationAboutPP
+	for i, v := range m {
+		arr[i] = v
+	}
 	return arr, err
 }
 
-func (q *Queries) ReadTheAmountOfTeachingWorkOfTheTeachingStaff(data [][]string) ([size]int32, error) {
+func (q *Queries) ReadTheAmountOfTeachingWorkOfTheTeachingStaff(data [][]string) ([size]TheAmountOfTeachingWorkOfTheTeachingStaff, error) {
 	var err error
 	lock := new(sync.Mutex)
-	m := make(map[int]int32)
+	m := make(map[int]TheAmountOfTeachingWorkOfTheTeachingStaff)
 	Lectures := data[lectures]
 	PracticeOrSeminars := data[practice_or_Seminars]
 	LabWorksOrClinicalClasses := data[Lab_works_or_Clinical_classes]
@@ -375,43 +384,126 @@ func (q *Queries) ReadTheAmountOfTeachingWorkOfTheTeachingStaff(data [][]string)
 	for i := 0; i < size; i++ {
 		wg.Add(1)
 		go func(i int) {
+			to, err := strconv.ParseFloat(Total[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			l, err := strconv.ParseFloat(Lectures[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			p, err := strconv.ParseFloat(PracticeOrSeminars[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			lab, err := strconv.ParseFloat(LabWorksOrClinicalClasses[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			c, err := strconv.ParseFloat(CurrentControl[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			inter, err := strconv.ParseFloat(InterimCertificationPoForBrs[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			reg, err := strconv.ParseFloat(RegistrationOfPaResults[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			ong, err := strconv.ParseFloat(OngoingConsultationsOnTheDiscipline[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			course, err := strconv.ParseFloat(CourseWorks[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			projects, err := strconv.ParseFloat(CourseProjects[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			edu, err := strconv.ParseFloat(EducationalPractice[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			proc, err := strconv.ParseFloat(ProcPedagogicalAndPreGraduatePractices[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			n, err := strconv.ParseFloat(nir[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			prac, err := strconv.ParseFloat(PracticesIncludingResearchOfDigitalMagistracies[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			rev, err := strconv.ParseFloat(ReviewingTheAbstractsOfGraduateStudents[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			cand, err := strconv.ParseFloat(CandidatesExam[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			sci, err := strconv.ParseFloat(ScientificGuidance[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			leader, err := strconv.ParseFloat(TheLeadershipOfTheWrcOrTheNkr[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			wrc, err := strconv.ParseFloat(ReviewOfTheWrc[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			ge, err := strconv.ParseFloat(gek[i], 10)
+			if err != nil {
+				log.Fatalln(err)
+			}
 			arg := Create_the_amount_of_teaching_work_of_the_teaching_staffParams{
-				Lectures:                               Lectures[i],
-				PracticeOrSeminars:                     PracticeOrSeminars[i],
-				LabWorksOrClinicalClasses:              LabWorksOrClinicalClasses[i],
-				CurrentControl:                         CurrentControl[i],
-				InterimCertificationPOForBRS:           InterimCertificationPoForBrs[i],
-				RegistrationOfPAResults:                RegistrationOfPaResults[i],
-				OngoingConsultationsOnTheDiscipline:    OngoingConsultationsOnTheDiscipline[i],
-				CourseWorks:                            CourseWorks[i],
-				CourseProjects:                         CourseProjects[i],
-				EducationalPractice:                    EducationalPractice[i],
-				ProcPedagogicalAndPreGraduatePractices: ProcPedagogicalAndPreGraduatePractices[i],
-				NIR:                                    nir[i],
-				PracticesIncludingResearchOfDigitalMagistracies: PracticesIncludingResearchOfDigitalMagistracies[i],
-				ReviewingTheAbstractsOfGraduateStudents:         ReviewingTheAbstractsOfGraduateStudents[i],
-				CandidatesExam:                                  CandidatesExam[i],
-				ScientificGuidance:                              ScientificGuidance[i],
-				TheLeadershipOfTheWRCOrTheNKR:                   TheLeadershipOfTheWrcOrTheNkr[i],
-				ReviewOfTheWRC:                                  ReviewOfTheWrc[i],
-				GEK:                                             gek[i],
-				Total:                                           Total[i],
+				Lectures:                               l,
+				PracticeOrSeminars:                     p,
+				LabWorksOrClinicalClasses:              lab,
+				CurrentControl:                         c,
+				InterimCertificationPOForBRS:           inter,
+				RegistrationOfPAResults:                reg,
+				OngoingConsultationsOnTheDiscipline:    ong,
+				CourseWorks:                            course,
+				CourseProjects:                         projects,
+				EducationalPractice:                    edu,
+				ProcPedagogicalAndPreGraduatePractices: proc,
+				NIR:                                    n,
+				PracticesIncludingResearchOfDigitalMagistracies: prac,
+				ReviewingTheAbstractsOfGraduateStudents:         rev,
+				CandidatesExam:                                  cand,
+				ScientificGuidance:                              sci,
+				TheLeadershipOfTheWRCOrTheNKR:                   leader,
+				ReviewOfTheWRC:                                  wrc,
+				GEK:                                             ge,
+				Total:                                           to,
 			}
 
-			c, err := q.Create_the_amount_of_teaching_work_of_the_teaching_staff(context.Background(), arg)
+			amount, err := q.Create_the_amount_of_teaching_work_of_the_teaching_staff(context.Background(), arg)
 
 			if err != nil {
 				log.Fatalln(err)
 			}
 			lock.Lock()
-			m[i] = c.ID
+			m[i] = amount
 			lock.Unlock()
 			wg.Done()
 		}(i)
 
 	}
 	wg.Wait()
-	arr := fill(m)
+	var arr [size]TheAmountOfTeachingWorkOfTheTeachingStaff
+	for i, v := range m {
+		arr[i] = v
+	}
 	return arr, err
 }
 
@@ -419,16 +511,16 @@ func (q *Queries) ReadItAll() error {
 	var err error
 	data, err := ReadExcel()
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 	log.Println("Всего прочитано элементов ", len(data)*end)
 	wg := new(sync.WaitGroup)
-	var program [size]int32
-	var discipline [size]int32
-	var kw [size]int32
-	var group [size]int32
-	var pps [size]int32
-	var amount [size]int32
+	var program [size]EducationalProgram
+	var discipline [size]DisciplineOrTypeOfAcademicWork
+	var kw [size]KW
+	var group [size]TheContingentOfStudent
+	var pps [size]InformationAboutPP
+	var amount [size]TheAmountOfTeachingWorkOfTheTeachingStaff
 	wg.Add(1)
 	go func() {
 		wg.Add(6)
@@ -481,16 +573,80 @@ func (q *Queries) ReadItAll() error {
 		wg.Add(1)
 		go func(i int) {
 			arg := Create_togetherParams{
-				ProgramID:    program[i],
-				DisciplineID: discipline[i],
-				GroupID:      group[i],
-				TeacherID:    pps[i],
-				KWID:         kw[i],
-				AmountID:     amount[i],
+				ProgramName:    program[i].NameOfTheProgram,
+				DisciplineName: discipline[i].NameOfTheDisciplineOrTypeOfAcademicWork,
+				GroupName:      group[i].GroupName,
+				TeacherName:    pps[i].FullName,
+				KWID:           kw[i].ID,
+				AmountID:       amount[i].ID,
 			}
-			_, err = q.Create_together(context.Background(), arg)
+			wg.Add(7)
+			go func() {
+				//go func() {
+				//	_, err := q.Create_Program_group(context.Background(), Create_Program_groupParams{
+				//		ProgramName: arg.ProgramName,
+				//		GroupName:   arg.GroupName,
+				//	})
+				//	if err != nil {
+				//		log.Fatalln("строка 449 ", err)
+				//	}
+				//	wg.Done()
+				//}()
+				//go func() {
+				//	_, err = q.Create_discipline_group(context.Background(), Create_discipline_groupParams{
+				//		DisciplineName: arg.DisciplineName,
+				//		GroupName:      arg.GroupName,
+				//	})
+				//	if err != nil {
+				//		log.Fatalln("строка 509 ", err)
+				//	}
+				//	wg.Done()
+				//}()
+				//go func() {
+				//	_, err = q.Create_teacher_group(context.Background(), Create_teacher_groupParams{
+				//		TeacherName:    arg.TeacherName,
+				//		DisciplineName: arg.DisciplineName,
+				//		GroupName:      arg.GroupName,
+				//	})
+				//	if err != nil {
+				//		log.Fatalln("строка 519 ", err)
+				//	}
+				//	wg.Done()
+				//}()
+				//go func() {
+				//	_, err = q.Create_group_kw(context.Background(), Create_group_kwParams{
+				//		KwID:           arg.KWID,
+				//		GroupName:      arg.GroupName,
+				//		DisciplineName: arg.DisciplineName,
+				//	})
+				//	if err != nil {
+				//		log.Fatalln("строка 530 ", err)
+				//	}
+				//	wg.Done()
+				//}()
+				//go func() {
+				//	_, err = q.Create_group_hours_discipline(context.Background(), Create_group_hours_disciplineParams{
+				//		GroupName:      arg.GroupName,
+				//		DisciplineName: arg.DisciplineName,
+				//		AmountID:       arg.AmountID,
+				//	})
+				//	if err != nil {
+				//		log.Fatalln("строка 541 ", err)
+				//	}
+				//	wg.Done()
+				//}()
+				go func() {
+					_, err = q.Create_together(context.Background(), arg)
+					if err != nil {
+						log.Fatalln("строка 548 ", err)
+					}
+					wg.Done()
+				}()
+				wg.Done()
+			}()
 			wg.Done()
 		}(i)
+
 	}
 	wg.Wait()
 	return err

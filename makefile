@@ -31,7 +31,7 @@ client:
 start_serv:
 	docker start server
 runserv:
-	cd server && docker run --name server --network network -p 8080:8080 -e DB_SOURCE="postgresql://root:1234@postgres:5440/test_education?sslmode=disable" server
+	cd server && docker run --name server --network network -p 8080:8080 -e DB_SOURCE="postgresql://root:1234@postgres:5432/test_education?sslmode=disable" server
 dockbuild:
 	cd server && docker build -t server:latest .
 test:

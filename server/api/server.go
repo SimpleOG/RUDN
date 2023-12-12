@@ -8,8 +8,6 @@ import (
 	configs "rudnWebApp/util"
 )
 
-const templatepath = "C:\\Users\\Oleg\\GolandProjects\\wepApp\\templates/"
-
 // Server структура отвечающая за обслуживание вебсервера
 type Server struct {
 	config configs.Config
@@ -38,10 +36,10 @@ func (s *Server) setupRouter() {
 	router.GET("/teacher/:name", s.TeacherHours)
 	router.GET("/download/:path", s.Download)
 	router.GET("/hello", s.SayHello)
-	router.GET("/course", s.GetCourseInfo)
+	router.GET("/course/:name", s.GetCourseInfo)
 	router.GET("/teachers", s.GetTeachers)
+	router.GET("/fill", s.Fill)
 	s.router = router
-	gin.SetMode(gin.ReleaseMode)
 }
 
 func (s *Server) Start(address string) error {
@@ -49,7 +47,16 @@ func (s *Server) Start(address string) error {
 }
 
 func (s *Server) SayHello(ctx *gin.Context) {
-	ctx.JSON(200, "Привет")
+	ctx.JSON(200, GoodResponse())
+}
+
+func (s *Server) Fill(ctx *gin.Context) {
+	err := s.store.ReadItAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, GoodResponse())
 }
 func (s *Server) Download(ctx *gin.Context) {
 	filePath := ctx.Param("path") // Путь к файлу, который вы хотите скачать
@@ -70,4 +77,10 @@ func (s *Server) Download(ctx *gin.Context) {
 
 	// Копируем содержимое файла в ответ
 	ctx.FileAttachment(filePath, "your_file.txt")
+}
+func errorResponse(err error) gin.H {
+	return gin.H{"error": err.Error()}
+}
+func GoodResponse() gin.H {
+	return gin.H{"Статус": "Ура,победа"}
 }

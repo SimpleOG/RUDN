@@ -580,7 +580,7 @@ func (q *Queries) ReadItAll() error {
 				KWID:           kw[i].ID,
 				AmountID:       amount[i].ID,
 			}
-			wg.Add(7)
+			wg.Add(2)
 			go func() {
 				//go func() {
 				//	_, err := q.Create_Program_group(context.Background(), Create_Program_groupParams{

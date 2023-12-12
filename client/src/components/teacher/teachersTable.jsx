@@ -19,6 +19,23 @@ const TeachersTable = ({ teachers }) => {
             name: "Условия привлечения",
             path: "terms_of_attraction"
         },
+
+        lectures: {
+            name: "Лекционные часы",
+            path: "lectures"
+        },
+        practice: {
+            name: "Часы практики",
+            path: "practice"
+        },
+        labs: {
+            name: "Лабораторные часы",
+            path: "labs"
+        },
+        total: {
+            name: "Всего",
+            path: "total"
+        },
     }
 
     return (

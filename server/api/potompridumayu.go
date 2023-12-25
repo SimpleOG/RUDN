@@ -27,6 +27,12 @@ func (s *Server) GetCourseInfo(ctx *gin.Context) {
 	}
 	ctx.JSON(200, info)
 }
+
+type GetTeacherResponse struct {
+	db.Teacher_InfoRow
+	db.Get_information_about_PPSRow
+}
+
 func (s *Server) GetTeachers(ctx *gin.Context) {
 	info, err := s.store.Get_information_about_PPS(ctx)
 	if err != nil {
@@ -51,29 +57,12 @@ func (s *Server) GetTeachers(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	type dat struct {
-		FullName          string  `json:"full_name"`
-		Department        string  `json:"department"`
-		Post              string  `json:"post"`
-		TermsOfAttraction string  `json:"terms_of_attraction"`
-		Total             float64 `json:"total"`
-		Lectures          float64 `json:"lectures"`
-		Practice          float64 `json:"practice"`
-		Labs              float64 `json:"labs"`
-	}
-	data := make([]dat, len(info))
+	data := make([]GetTeacherResponse, len(info))
 	for i := range info {
-		data[i] = dat{
-			FullName:          info[i].FullName,
-			Department:        info[i].Department,
-			Post:              info[i].Post,
-			TermsOfAttraction: info[i].TermsOfAttraction,
-			Total:             total[i].Total,
-			Lectures:          total[i].Lectures,
-			Practice:          total[i].Practice,
-			Labs:              total[i].Labs,
+		data[i] = GetTeacherResponse{
+			Teacher_InfoRow:              total[i],
+			Get_information_about_PPSRow: info[i],
 		}
 	}
-
 	ctx.JSON(200, data)
 }

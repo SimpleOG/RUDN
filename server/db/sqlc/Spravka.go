@@ -10,9 +10,7 @@ import (
 	"unicode"
 )
 
-var w, _ = os.Getwd()
-
-var way = w + "/ForDownload"
+const tway = "C:\\Users\\Oleg\\GolandProjects\\rudnWebApp\\server\\ForDownload/"
 
 func cutter(name string, c chan string) <-chan string {
 	r := []rune(name)
@@ -44,12 +42,12 @@ func (q *Queries) FillDoc(path, name string, m docx.PlaceholderMap) error {
 		return err
 	}
 	dirname := d + "_files"
-	err = os.Chdir(way)
+	err = os.Chdir(tway)
 	err = os.Mkdir(dirname, os.FileMode(0522))
 	if err != nil {
 		//пока что игнор
 	}
-	err = os.Chdir(way + dirname)
+	err = os.Chdir(tway + dirname)
 	if err != nil {
 		return err
 	}
@@ -74,7 +72,7 @@ func (q *Queries) FillTeacherHours(name string) error {
 		"year":         time.Now().Year(),
 	}
 
-	err = q.FillDoc(way+"Справка Пример.docx", data.TeacherName+"_часы.docx", m)
+	err = q.FillDoc(tway+"Справка Пример.docx", data.TeacherName+"_часы.docx", m)
 	if err != nil {
 		return err
 	}

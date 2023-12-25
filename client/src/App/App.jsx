@@ -8,15 +8,16 @@ import Groups from "../components/groups/groups";
 
 const App = () => {
     return (
-        <div className="container">
-            <Navbar />
-            <Routes>
-                <Route path={"/"} element={<HomePage/>}/>
-                <Route path={"/all_teachers"} element={<Teachers/>}/>
-                <Route path={"/all_groups"} element={<Groups/>}/>
-                <Route path={"/all_courses"} element={<Teachers/>}/>
-            </Routes>
-        </div>
+            <div className="container">
+                <Navbar />
+                <Routes>
+                    <Route path={"/"} element={<HomePage/>}/>
+                    <Route path={"/all_teachers"} element={<Teachers/>}/>
+                    <Route path={"/all_groups"} element={<Groups/>}/>
+                    <Route path={"/all_courses"} element={<Teachers/>}/>
+                </Routes>
+            </div>
+
     );
 
 };

@@ -1,10 +1,9 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
+/*.container {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*}*/
 
 .table_dark {
     font-family: 'Nunito Sans', sans-serif;
@@ -16,9 +15,9 @@
     background: #252F48;
 }
 
-
 .table_container{
     width: 100%;
+    overflow-x: auto;
 }
 .table_dark th {
     color: #EDB749;

@@ -10,26 +10,12 @@ const TableBody = ({ data, columns }) => {
                 {Object.keys(columns).map((column) => (
                     <td>
                         {item[columns[column].path]}
+
                     </td>
+
                 ))}
             </tr>
         ))}
-        {/*{data.map((teacher) => {*/}
-        {/*    return (*/}
-        {/*        <tr>*/}
-        {/*            {Object.keys(validKey).map((key) => {*/}
-        {/*                if (key === "full_name") {*/}
-        {/*                    return (*/}
-        {/*                        <td><a href="">{teacher[key]}</a></td>*/}
-        {/*                    )*/}
-        {/*                }*/}
-        {/*                return (*/}
-        {/*                    <td>{teacher[key]}</td>*/}
-        {/*                )*/}
-        {/*            })}*/}
-        {/*        </tr>*/}
-        {/*    )*/}
-        {/*})}*/}
         </tbody>
     )
 }

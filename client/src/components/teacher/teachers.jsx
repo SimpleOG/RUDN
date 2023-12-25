@@ -1,13 +1,12 @@
 import React, {useEffect, useState} from "react";
-import Table from "../table/table";
 import Pagination from "../pagination/pagination";
 import {paginate} from "../../utils/paginate";
 import {getFields} from "../../utils/getFields";
 import TeachersTable from "./teachersTable";
+import "./teachers.css"
 
 const Teachers = () => {
 
-    console.log("rendered");
     const [teachers, setTeachers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     // const [teacherColumn, setTeacherColumn] = useState({});
@@ -22,17 +21,13 @@ const Teachers = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            console.log("хуй");
             const data = await fetch("http://localhost:8080/teachers");
             const response = await data.json()
+            console.log(response)
             setTeachers(response);
             response.info
             teacherColumns = getFields(response);
-            console.log(teacherColumns);
-
-
-        }
-
+            console.log(teacherColumns);        }
         fetchData();
     }, [])
 
@@ -43,7 +38,7 @@ const Teachers = () => {
     return (
         teachers.length > 0
             ?
-            <>
+            <div className="temp2">
                 <TeachersTable teachers={teacherCrop}/>
                 <Pagination
                     itemsCount={count}
@@ -51,7 +46,7 @@ const Teachers = () => {
                     currentPage={currentPage}
                     onPageChange={handlePageChange}
                 />
-            </>
+            </div>
             :
             "Loading..."
     );

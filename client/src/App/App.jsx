@@ -16,6 +16,7 @@ const App = () => {
                     <Route path={"/all_groups"} element={<Groups/>}/>
                     <Route path={"/all_courses"} element={<Teachers/>}/>
                 </Routes>
+                <div className="block-hidden"></div>
             </div>
 
     );

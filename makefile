@@ -3,15 +3,15 @@ createmigration:
 image:
 	docker pull postgres:12-alpine
 postgres:
-	docker run --name postgres  --network network -p 5440:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=1234 -d postgres:12-alpine
+	docker run --name postgres  --network network -p 5441:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=1234 -d postgres:12-alpine
 createdb:
 	docker exec -it postgres createdb --username=root --owner=root education
 dropdb:
 	docker exec -it postgres dropdb education
 mgu:
-	migrate -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5440/education?sslmode=disable" -verbose up
+	migrate -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose up
 mgd:
-	migrate -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5440/education?sslmode=disable" -verbose down
+	migrate -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose down
 sqlc:
 	cd server &&	sqlc generate
 server:
@@ -19,7 +19,7 @@ server:
 client:
 	cd client && npm start
 runserv:
-	cd server && docker run --name server --network network -p 8080:8080 -e DB_SOURCE="postgresql://root:1234@postgres:5432/test_education?sslmode=disable" server
+	cd server && docker run --name server --network network -p 8080:8080 -e DB_SOURCE="postgresql://root:1234@postgres:5455/education?sslmode=disable" server
 dockbuild:
 	cd server && docker build -t server:latest .
 test:

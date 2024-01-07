@@ -74,7 +74,7 @@ const (
 	GEK
 	total
 	start = 5
-	end   = 1645
+	end   = 1640
 	size  = end - start
 )
 
@@ -131,7 +131,7 @@ func (q *Queries) ReadEducationalProgram(data [][]string) ([size]EducationalProg
 
 	}
 	wg.Wait()
-	var arr [1640]EducationalProgram
+	var arr [size]EducationalProgram
 	for i, v := range m {
 		arr[i] = v
 	}
@@ -169,7 +169,7 @@ func (q *Queries) ReadDisciplineOrTypeOfAcademicWork(data [][]string) ([size]Dis
 		}(i)
 	}
 	wg.Wait()
-	var arr [1640]DisciplineOrTypeOfAcademicWork
+	var arr [size]DisciplineOrTypeOfAcademicWork
 	for i, v := range m {
 		arr[i] = v
 	}
@@ -187,7 +187,7 @@ func (q *Queries) ReadKW(data [][]string) ([size]KW, error) {
 	LaboratoriesHours := data[laboratories_hours]
 	PractiseHours := data[practise_hours]
 	TypeOfPaOrGia := data[type_of_PA_or_GIA]
-	CourseWorks := data[courseWorks]
+	CourseWorks := data[course_works]
 	CourseProjects := data[course_projects]
 	CourseUchAveZeOnRup := data[course_Uch_ave_ZE_on_RUP]
 	PrZeOnRup := data[pr_ZE_on_RUP]

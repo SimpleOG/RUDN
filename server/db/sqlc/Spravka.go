@@ -3,14 +3,15 @@ package db
 import (
 	"context"
 	"fmt"
+	docx2 "github.com/gingfrederik/docx"
 	"github.com/lukasjarosch/go-docx"
-	"math"
 	"os"
+	"path/filepath"
 	"time"
 	"unicode"
 )
 
-const tway = "C:\\Users\\Oleg\\GolandProjects\\rudnWebApp\\server\\ForDownload/"
+const Tway = "./ForDownload/"
 
 func cutter(name string, c chan string) <-chan string {
 	r := []rune(name)
@@ -28,34 +29,19 @@ func cutter(name string, c chan string) <-chan string {
 	c <- string(r)
 	return c
 }
-func (q *Queries) FillDoc(path, name string, m docx.PlaceholderMap) error {
-	ch := make(chan string)
-	defer close(ch)
-	go cutter(name, ch)
-	d := <-ch
-	doc, err := docx.Open(path)
+
+// FillWord передаю сюда имя и нужные поля. Оно возвращает мне путь к файлу
+func (q *Queries) FillWord(name string) (string, string, error) {
+	f := docx2.NewFile()
+	para := f.AddParagraph()
+	para.AddText(name).Size(22).Color("808080")
+	name += "_данные.docx"
+	filepth := "./ForDownload/" + name
+	err := f.Save(filepth)
 	if err != nil {
-		return err
+		return "", "", err
 	}
-	err = doc.ReplaceAll(m)
-	if err != nil {
-		return err
-	}
-	dirname := d + "_files"
-	err = os.Chdir(tway)
-	err = os.Mkdir(dirname, os.FileMode(0522))
-	if err != nil {
-		//пока что игнор
-	}
-	err = os.Chdir(tway + dirname)
-	if err != nil {
-		return err
-	}
-	err = doc.WriteToFile(name)
-	if err != nil {
-		return err
-	}
-	return err
+	return filepth, name, nil
 }
 
 func (q *Queries) FillTeacherHours(name string) error {
@@ -71,18 +57,48 @@ func (q *Queries) FillTeacherHours(name string) error {
 		"Total":        fmt.Sprintf("%.2f", data.Total),
 		"year":         time.Now().Year(),
 	}
-
-	err = q.FillDoc(tway+"Справка Пример.docx", data.TeacherName+"_часы.docx", m)
+	doc, err := docx.Open(Tway + "СправкаПример.docx")
+	if err != nil {
+		return err
+	}
+	err = doc.ReplaceAll(m)
+	if err != nil {
+		return err
+	}
+	err = MakeDoc(data.TeacherName+"_часы.docx", doc)
 	if err != nil {
 		return err
 	}
 	return err
 }
-func (q *Queries) TeacherHours(name string) (Teacher_InfoRow, error) {
-	data, err := q.Teacher_Info(context.Background(), name)
+
+// создание папки и word файла
+func MakeDoc(name string, doc *docx.Document) error {
+	ch := make(chan string)
+	go cutter(name, ch)
+	d := <-ch
+	close(ch)
+	dirname := d + "_files"
+	err := os.Chdir(Tway)
+	err = os.MkdirAll(dirname, os.FileMode(0522))
 	if err != nil {
-		return Teacher_InfoRow{}, nil
+		return err
 	}
-	data.Total = math.Round(data.Total)
-	return data, nil
+	err = os.Chdir(dirname)
+	if err != nil {
+		return err
+	}
+	err = doc.WriteToFile(name)
+	if err != nil {
+		return err
+	}
+	curDir, err := os.Getwd()
+	if err != nil {
+		return err
+	}
+	err = os.Chdir(filepath.Join(curDir, "..", ".."))
+	if err != nil {
+		return err
+	}
+	return err
 }

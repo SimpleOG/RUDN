@@ -16,6 +16,7 @@ func (s *Server) TeacherHours(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(200, GoodResponse())
+
 }
 
 func (s *Server) GetCourseInfo(ctx *gin.Context) {
@@ -44,7 +45,7 @@ func (s *Server) GetTeachers(ctx *gin.Context) {
 	for i, v := range info {
 		wg.Add(1)
 		go func(i int, v db.Get_information_about_PPSRow) {
-			total[i], err = s.store.TeacherHours(v.FullName)
+			total[i], err = s.store.Teacher_Info(ctx, v.FullName)
 			if err != nil {
 				ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 				return

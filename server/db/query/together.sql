@@ -11,7 +11,7 @@ RETURNING *;
 
 -- name: Teacher_Info :one
 select teacher_name,
-       cast(sum(total) as float)                           as total,
+       round(cast(sum(total) as float) )                          as total,
        cast(sum(lectures) as float)                        as lectures,
        cast(sum("practice_or_Seminars") as float)          as practice,
        cast(sum("Lab_works_or_Clinical_classes") as float) as labs

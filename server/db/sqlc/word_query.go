@@ -3,7 +3,7 @@ package db
 type WordQuery interface {
 	ReadItAll() error
 	FillTeacherHours(name string) error
-	TeacherHours(name string) (Teacher_InfoRow, error)
+	FillWord(name string) (string, string, error)
 }
 
 var _ WordQuery = (*Queries)(nil)

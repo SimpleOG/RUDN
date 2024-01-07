@@ -27,6 +27,7 @@ func NewServer(config configs.Config, store db.Store) (*Server, error) {
 
 func (s *Server) setupRouter() {
 	router := gin.Default()
+
 	//настройка роутов
 	router.Use(func() gin.HandlerFunc {
 		return func(ctx *gin.Context) {
@@ -34,11 +35,11 @@ func (s *Server) setupRouter() {
 		}
 	}())
 	router.GET("/teacher/:name", s.TeacherHours)
-	router.GET("/download/:path", s.Download)
 	router.GET("/hello", s.SayHello)
 	router.GET("/course/:name", s.GetCourseInfo)
 	router.GET("/teachers", s.GetTeachers)
 	router.GET("/fill", s.Fill)
+	router.GET("/getWordFile/:name", s.DownloadFile)
 	s.router = router
 }
 

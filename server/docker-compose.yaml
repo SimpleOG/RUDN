@@ -5,15 +5,24 @@ services:
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=test_education
+      - POSTGRES_DB=education
     ports:
       - "5440:5432"
   api:
-      build:
-        context: .
-        dockerfile: Dockerfile
-      ports:
-        - "8080:8080"
-      environment:
-        - DB_SOURCE=postgresql://root:1234@localhost:5432/test_education?sslmode=disable
-
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_SOURCE=postgresql://root:1234@postgres:5432/education?sslmode=disable
+    depends_on:
+      - postgres
+    entrypoint:
+      [
+        "/app/wait-for.sh",
+        "postgres:5432",
+        "--",
+        "/app/start.sh"
+      ]
+    command: ["/app/main"]

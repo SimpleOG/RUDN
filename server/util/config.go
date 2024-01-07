@@ -6,18 +6,17 @@ import (
 
 type Config struct {
 	DBDriver      string `mapstructure:"DB_DRIVER"`
+	MigrationUrl  string `mapstructure:"MIGRATION_URL"`
 	DBDSource     string `mapstructure:"DB_SOURCE"`
 	ServerAddress string `mapstructure:"SERVER_ADDRESS"`
 }
 
 func InitConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
-	//file, err := filepath.Glob("*.env")
+
 	viper.SetConfigType("env")
 	viper.SetConfigName("app")
-
 	viper.AutomaticEnv()
-
 	err = viper.ReadInConfig()
 	if err != nil {
 		return

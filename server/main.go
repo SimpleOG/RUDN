@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -15,7 +14,7 @@ import (
 )
 
 func main() {
-	gin.SetMode(gin.ReleaseMode)
+	//gin.SetMode(gin.ReleaseMode)
 	config, err := util.InitConfig(".")
 	if err != nil {
 		log.Fatalf("cannot load config %s", err)
@@ -25,17 +24,17 @@ func main() {
 		log.Fatalf("cannot connect to db %s", err)
 	}
 	store := db.NewStore(connPool)
-	runDBMigration(config.MigrationUrl, config.DBDSource)
 	serv, err := api.NewServer(config, store)
 	if err != nil {
 		log.Fatalln("cannot create api : ", err)
 	}
+	//runDBMigration(config.MigrationUrl, config.DBDSource)
 
 	err = serv.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatalln("cannot start api : ", err)
 	}
-
+	//StopDBMigration(config.MigrationUrl, config.DBDSource)
 }
 
 func runDBMigration(migrationURL, dbSource string) {
@@ -48,6 +47,16 @@ func runDBMigration(migrationURL, dbSource string) {
 			log.Println("уже заполнено")
 			return
 		}
+		log.Fatalln("cannot start migration", err)
+	}
+
+}
+func StopDBMigration(migrationURL, dbSource string) {
+	migration, err := migrate.New(migrationURL, dbSource)
+	if err != nil {
+		log.Fatalln("cannot create migration", err)
+	}
+	if err = migration.Down(); err != nil {
 		log.Fatalln("cannot start migration", err)
 	}
 

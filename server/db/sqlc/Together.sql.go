@@ -7,105 +7,46 @@ package db
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const course_Info = `-- name: Course_Info :many
-select program_name,discipline_name,teacher_name,group_name,
-       type_of_educational_work,lecture_hours,laboratories_hours,practise_hours,
-       "type_of_PA_or_GIA",lectures,"practice_or_Seminars","Lab_works_or_Clinical_classes",
-       total
-from together t
-         join    k_w kw on kw.id = t.k_w_id
-         join the_amount_of_teaching_work_of_the_teaching_staff a on t.amount_id = a.id
-where t.program_name=$1
-`
-
-type Course_InfoRow struct {
-	ProgramName               string  `json:"program_name"`
-	DisciplineName            string  `json:"discipline_name"`
-	TeacherName               string  `json:"teacher_name"`
-	GroupName                 string  `json:"group_name"`
-	TypeOfEducationalWork     string  `json:"type_of_educational_work"`
-	LectureHours              int32   `json:"lecture_hours"`
-	LaboratoriesHours         int32   `json:"laboratories_hours"`
-	PractiseHours             int32   `json:"practise_hours"`
-	TypeOfPAOrGIA             string  `json:"type_of_PA_or_GIA"`
-	Lectures                  float64 `json:"lectures"`
-	PracticeOrSeminars        float64 `json:"practice_or_Seminars"`
-	LabWorksOrClinicalClasses float64 `json:"Lab_works_or_Clinical_classes"`
-	Total                     float64 `json:"total"`
-}
-
-func (q *Queries) Course_Info(ctx context.Context, programName string) ([]Course_InfoRow, error) {
-	rows, err := q.db.Query(ctx, course_Info, programName)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []Course_InfoRow{}
-	for rows.Next() {
-		var i Course_InfoRow
-		if err := rows.Scan(
-			&i.ProgramName,
-			&i.DisciplineName,
-			&i.TeacherName,
-			&i.GroupName,
-			&i.TypeOfEducationalWork,
-			&i.LectureHours,
-			&i.LaboratoriesHours,
-			&i.PractiseHours,
-			&i.TypeOfPAOrGIA,
-			&i.Lectures,
-			&i.PracticeOrSeminars,
-			&i.LabWorksOrClinicalClasses,
-			&i.Total,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
-}
-
 const create_together = `-- name: Create_together :one
-INSERT INTO "together"(program_name,
-                       discipline_name,
-                       group_name,
-                       teacher_name,
+INSERT INTO "together"(program_id,
+                       discipline_id,
+                       group_id,
+                       teacher_id,
                        k_w_id,
                        amount_id)
 
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING program_name, discipline_name, teacher_name, group_name, k_w_id, amount_id
+RETURNING program_id, discipline_id, teacher_id, group_id, k_w_id, amount_id
 `
 
 type Create_togetherParams struct {
-	ProgramName    string `json:"program_name"`
-	DisciplineName string `json:"discipline_name"`
-	GroupName      string `json:"group_name"`
-	TeacherName    string `json:"teacher_name"`
-	KWID           int32  `json:"k_w_id"`
-	AmountID       int32  `json:"amount_id"`
+	ProgramID    int32 `json:"program_id"`
+	DisciplineID int32 `json:"discipline_id"`
+	GroupID      int32 `json:"group_id"`
+	TeacherID    int32 `json:"teacher_id"`
+	KWID         int32 `json:"k_w_id"`
+	AmountID     int32 `json:"amount_id"`
 }
 
 func (q *Queries) Create_together(ctx context.Context, arg Create_togetherParams) (Together, error) {
 	row := q.db.QueryRow(ctx, create_together,
-		arg.ProgramName,
-		arg.DisciplineName,
-		arg.GroupName,
-		arg.TeacherName,
+		arg.ProgramID,
+		arg.DisciplineID,
+		arg.GroupID,
+		arg.TeacherID,
 		arg.KWID,
 		arg.AmountID,
 	)
 	var i Together
 	err := row.Scan(
-		&i.ProgramName,
-		&i.DisciplineName,
-		&i.TeacherName,
-		&i.GroupName,
+		&i.ProgramID,
+		&i.DisciplineID,
+		&i.TeacherID,
+		&i.GroupID,
 		&i.KWID,
 		&i.AmountID,
 	)
@@ -113,29 +54,37 @@ func (q *Queries) Create_together(ctx context.Context, arg Create_togetherParams
 }
 
 const teacher_Info = `-- name: Teacher_Info :one
-select teacher_name,
-       round(cast(sum(total) as float) )                          as total,
-       cast(sum(lectures) as float)                        as lectures,
-       cast(sum("practice_or_Seminars") as float)          as practice,
-       cast(sum("Lab_works_or_Clinical_classes") as float) as labs
-from together as t
-         join the_amount_of_teaching_work_of_the_teaching_staff as a on t.teacher_name = $1 and t.amount_id = a.id
-GROUP BY teacher_name
+select full_name, department,post,terms_of_attraction,
+       round(cast(sum(total) as numeric),2 )                as total,
+       round( cast(sum(lectures) as numeric)     ,2 )                     as lectures,
+       round( cast(sum("practice_or_Seminars") as numeric)  ,2 )          as practice,
+       round( cast(sum("Lab_works_or_Clinical_classes") as numeric) ,2 )  as labs
+from "information_about_PPS" i
+         join together t  on  t.teacher_id = i.id
+         join the_amount_of_teaching_work_of_the_teaching_staff as a on t.amount_id = a.id
+where i.full_name=$1
+group by  full_name,  department, post, terms_of_attraction
 `
 
 type Teacher_InfoRow struct {
-	TeacherName string  `json:"teacher_name"`
-	Total       float64 `json:"total"`
-	Lectures    float64 `json:"lectures"`
-	Practice    float64 `json:"practice"`
-	Labs        float64 `json:"labs"`
+	FullName          string         `json:"full_name"`
+	Department        string         `json:"department"`
+	Post              string         `json:"post"`
+	TermsOfAttraction string         `json:"terms_of_attraction"`
+	Total             pgtype.Numeric `json:"total"`
+	Lectures          pgtype.Numeric `json:"lectures"`
+	Practice          pgtype.Numeric `json:"practice"`
+	Labs              pgtype.Numeric `json:"labs"`
 }
 
-func (q *Queries) Teacher_Info(ctx context.Context, teacherName string) (Teacher_InfoRow, error) {
-	row := q.db.QueryRow(ctx, teacher_Info, teacherName)
+func (q *Queries) Teacher_Info(ctx context.Context, fullName string) (Teacher_InfoRow, error) {
+	row := q.db.QueryRow(ctx, teacher_Info, fullName)
 	var i Teacher_InfoRow
 	err := row.Scan(
-		&i.TeacherName,
+		&i.FullName,
+		&i.Department,
+		&i.Post,
+		&i.TermsOfAttraction,
 		&i.Total,
 		&i.Lectures,
 		&i.Practice,

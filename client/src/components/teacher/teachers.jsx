@@ -4,8 +4,12 @@ import {paginate} from "../../utils/paginate";
 import {getFields} from "../../utils/getFields";
 import TeachersTable from "./teachersTable";
 import "./teachers.css"
+import {useParams} from "react-router-dom";
+import TeacherPage from "../teacherPage/teacherPage";
 
 const Teachers = () => {
+    const { name } = useParams();
+    console.log(name);
 
     const [teachers, setTeachers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,11 +27,12 @@ const Teachers = () => {
         const fetchData = async () => {
             const data = await fetch("http://localhost:8080/teachers");
             const response = await data.json()
-            console.log(response)
+            // console.log(response)
             setTeachers(response);
-            response.info
+            // response.info
             teacherColumns = getFields(response);
-            console.log(teacherColumns);        }
+            // console.log(teacherColumns);
+        }
         fetchData();
     }, [])
 
@@ -36,6 +41,7 @@ const Teachers = () => {
     const teacherCrop = paginate(teachers, currentPage, pageSize);
 
     return (
+        name ? <TeacherPage name={name}/> :
         teachers.length > 0
             ?
             <div className="temp2">
@@ -53,3 +59,16 @@ const Teachers = () => {
 };
 
 export default Teachers;
+
+// [
+//     {
+//         program_name:
+//         discipline_name:
+//         group_name:
+//         foreign :
+//         RF:
+//     },
+//     {
+//
+//     }
+// ]

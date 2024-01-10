@@ -5,12 +5,18 @@ module.exports = {
     entry: path.resolve(__dirname, "src", "index.js"),
     output: {
         path: path.resolve(__dirname, "build"),
-        filename: "build.js"
+        filename: "build.js",
+        publicPath: '/'
     },
     mode: "development",
     devServer: {
         port: 8081,
-        historyApiFallback:true
+        // historyApiFallback:true
+        historyApiFallback: {
+            rewrites: [
+                { from: /./, to: '/index.html' }
+            ]
+        }
     },
     plugins: [new HtmlWebpackPlugin({
         template: path.resolve(__dirname, "public", "index.html")

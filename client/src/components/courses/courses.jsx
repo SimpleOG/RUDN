@@ -2,11 +2,11 @@ import Pagination from "../pagination/pagination";
 import React, {useEffect, useState} from "react";
 
 import {paginate} from "../../utils/paginate";
-import GroupsTable from "./groupsTable";
+import CoursesTable from "./coursesTable";
 
-const Groups = ({ name }) => {
+const Courses = ({ name }) => {
 
-    const [groups, setgroups] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
 
     const pageSize = 10;
@@ -18,25 +18,25 @@ const Groups = ({ name }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetch(`http://localhost:8080/groups/${name}`);
+            const data = await fetch(`http://localhost:8080/course/${name}`);
             const response = await data.json()
             console.log(response);
-            setgroups(response);
+            setCourses(response);
         }
 
         fetchData();
     }, [])
 
 
-    const count = groups.length;
-    const groupsCrop = paginate(groups, currentPage, pageSize);
+    const count = courses.length;
+    const coursesCrop = paginate(courses, currentPage, pageSize);
 
     return (
         (
-            groups.length > 0
+            courses.length > 0
                 ?
                 <>
-                    <GroupsTable groups={groupsCrop}/>
+                    <CoursesTable courses={coursesCrop}/>
                     <Pagination
                         itemsCount={count}
                         pageSize={pageSize}
@@ -50,4 +50,4 @@ const Groups = ({ name }) => {
     )
 }
 
-export default Groups;
+export default Courses;

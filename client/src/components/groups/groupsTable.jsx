@@ -3,22 +3,19 @@ import Table from "../table/table";
 
 const GroupsTable = ({ groups }) => {
     const groupsColumns = {
-        id: {
-            name: "ID",
-            path: "id"
+        name: {
+            name: "Название группы",
+            path: "name"
         },
         code: {
             name: "Код",
             path: "code"
         },
-        number: {
-            name: "Номер",
-            path: "number"
+        programname: {
+            name: "Название программы",
+            path: "name_of_the_program"
         },
-        name: {
-            name: "Название",
-            path: "name"
-        }
+
     }
 
     return (

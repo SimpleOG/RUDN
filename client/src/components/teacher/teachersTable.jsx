@@ -1,11 +1,19 @@
 import React from "react";
 import Table from "../table/table";
+import {Link} from "react-router-dom";
 
 const TeachersTable = ({ teachers }) => {
     const teacherColumns = {
         full_name: {
             name: "Преподаватель",
-            path: "full_name"
+            path: "full_name",
+            component: (teacher) => (
+                <Link
+                    to={`${teacher.full_name}`}
+                >
+                    {teacher.full_name}
+                </Link>
+            )
         },
         department: {
             name: "Кафедра",

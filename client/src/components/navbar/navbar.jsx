@@ -19,17 +19,17 @@ const Navbar = () => {
             <div className="navbar__secondary">
                 <ul>
                     <li>
-                        <Link to={"/all_teachers"}>
+                        <Link to={"/teachers"}>
                             Преподаватели
                         </Link>
                     </li>
                     <li>
-                        <Link to={"/all_groups"}>
+                        <Link to={"/groups"}>
                             Группы
                         </Link>
                     </li>
                     <li>
-                        <Link to={"/all_courses"}>
+                        <Link to={"/courses"}>
                             Курсы
                         </Link>
                     </li>

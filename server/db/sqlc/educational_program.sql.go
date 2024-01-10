@@ -10,6 +10,7 @@ import (
 )
 
 const create_EducationalProgram = `-- name: Create_EducationalProgram :one
+
 INSERT INTO "educational_program" ("the_code_of_the_OOP_RUDN",
                                    "direction_code",
                                    "name_of_the_program")
@@ -37,6 +38,7 @@ func (q *Queries) Create_EducationalProgram(ctx context.Context, arg Create_Educ
 }
 
 const get_EducationalProgram = `-- name: Get_EducationalProgram :one
+
 SELECT id, "the_code_of_the_OOP_RUDN", direction_code, name_of_the_program
 FROM educational_program
 WHERE "id" = $1

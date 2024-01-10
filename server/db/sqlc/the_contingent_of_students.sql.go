@@ -7,28 +7,26 @@ package db
 
 import (
 	"context"
-	"strings"
 )
 
 const create_the_contingent_of_students = `-- name: Create_the_contingent_of_students :one
-INSERT INTO "the_contingent_of_students" (
-              "group_name",
-              "code"         ,
-              "group_number" ,
-              "of_groups"    ,
-              "subgroups"    ,
-              "total_people" ,
-              "RF"           ,
-              "foreign"      ,
-              "standard"     ,
-              "calculated" ,
-              "PK")
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10,$11)
+
+INSERT INTO "the_contingent_of_students"("group_name",
+                                         "code",
+                                         "group_number",
+                                         "of_groups",
+                                         "subgroups",
+                                         "total_people",
+                                         "RF",
+                                         "foreign",
+                                         "standard",
+                                         "calculated",
+                                         "PK")
+VALUES ($1  ||'-'|| $2, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING id, group_name, code, group_number, of_groups, subgroups, total_people, "RF", "foreign", standard, calculated, "PK"
 `
 
 type Create_the_contingent_of_studentsParams struct {
-	GroupName   string `json:"group_name"`
 	Code        string `json:"code"`
 	GroupNumber string `json:"group_number"`
 	OfGroups    string `json:"of_groups"`
@@ -41,10 +39,8 @@ type Create_the_contingent_of_studentsParams struct {
 	PK          string `json:"PK"`
 }
 
-// i.GroupName=strings.ToLower(i.GroupName+i.Code)
 func (q *Queries) Create_the_contingent_of_students(ctx context.Context, arg Create_the_contingent_of_studentsParams) (TheContingentOfStudent, error) {
 	row := q.db.QueryRow(ctx, create_the_contingent_of_students,
-		arg.GroupName,
 		arg.Code,
 		arg.GroupNumber,
 		arg.OfGroups,
@@ -71,11 +67,11 @@ func (q *Queries) Create_the_contingent_of_students(ctx context.Context, arg Cre
 		&i.Calculated,
 		&i.PK,
 	)
-	i.GroupName=strings.ToLower(i.GroupName+i.Code)
 	return i, err
 }
 
 const get_the_contingent_of_students = `-- name: Get_the_contingent_of_students :one
+
 SELECT id, group_name, code, group_number, of_groups, subgroups, total_people, "RF", "foreign", standard, calculated, "PK"
 FROM the_contingent_of_students
 WHERE "id" = $1

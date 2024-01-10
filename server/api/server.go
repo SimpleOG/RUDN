@@ -3,7 +3,6 @@ package api
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"os"
 	"rudnWebApp/db/sqlc"
 	configs "rudnWebApp/util"
 )
@@ -36,10 +35,13 @@ func (s *Server) setupRouter() {
 	}())
 	router.GET("/teacher/:name", s.TeacherHours)
 	router.GET("/hello", s.SayHello)
-	router.GET("/course/:name", s.GetCourseInfo)
+	//router.GET("/course/:name", s.GetCourseInfo)
 	router.GET("/teachers", s.GetTeachers)
 	router.GET("/fill", s.Fill)
 	router.GET("/getWordFile/:name", s.DownloadFile)
+	router.GET("/course/:name", s.ListAllTeachersDisciplines)
+	router.GET("/groups/:name", s.MockGroupData)
+
 	s.router = router
 }
 
@@ -58,27 +60,9 @@ func (s *Server) Fill(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, GoodResponse())
-}
-func (s *Server) Download(ctx *gin.Context) {
-	filePath := ctx.Param("path") // Путь к файлу, который вы хотите скачать
-	// Открываем файл
-	file, err := os.Open(filePath)
-	if err != nil {
-		ctx.AbortWithStatus(http.StatusNotFound)
-		return
-	}
-	defer file.Close()
 
-	// Устанавливаем заголовки для скачивания файла
-	ctx.Header("Content-Description", "File Transfer")
-	ctx.Header("Content-Disposition", "attachment; filename=your_file.txt")
-	ctx.Header("Content-Type", "application/octet-stream")
-	ctx.Header("Content-Transfer-Encoding", "binary")
-	ctx.Header("Expires", "0")
-
-	// Копируем содержимое файла в ответ
-	ctx.FileAttachment(filePath, "your_file.txt")
 }
+
 func errorResponse(err error) gin.H {
 	return gin.H{"error": err.Error()}
 }

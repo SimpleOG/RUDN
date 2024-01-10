@@ -1,5 +1,5 @@
 createmigration:
-	migrate create -ext sql -dir ./server/db/Migrations -seq init_education
+	migrate create -ext sql -dir ./server/db/Migrations -seq new_migration
 image:
 	docker pull postgres:12-alpine
 postgres:
@@ -11,7 +11,7 @@ dropdb:
 mgu:
 	migrate -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose up
 mgd:
-	migrate -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose down
+	migrate  -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose down
 sqlc:
 	cd server &&	sqlc generate
 server:
@@ -29,4 +29,4 @@ network:
 compose:
 	cd server && docker compose up
 
-.PHONY: start_serv compose dockbuild runserv server client createmigration  createdb   postgres createdb dropdb mgd dbtest  sqlc image test start_post
+.PHONY:  start_serv compose dockbuild runserv server client createmigration  createdb   postgres createdb dropdb mgd dbtest  sqlc image test start_post

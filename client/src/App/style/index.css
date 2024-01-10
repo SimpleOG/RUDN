@@ -14,7 +14,7 @@
     justify-content: space-between;
     background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),url("рудн.jpg");
     background-size: cover;
-    min-height: 100vh;
+    height: 100vh;
 }
 
 .block-hidden {

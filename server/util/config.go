@@ -15,7 +15,7 @@ func InitConfig(path string) (config Config, err error) {
 	viper.AddConfigPath(path)
 
 	viper.SetConfigType("env")
-	viper.SetConfigName("app")
+	viper.SetConfigName("test_app")
 	viper.AutomaticEnv()
 	err = viper.ReadInConfig()
 	if err != nil {

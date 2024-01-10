@@ -10,6 +10,7 @@ import (
 )
 
 const create_k_w = `-- name: Create_k_w :one
+
 INSERT INTO "k_w" ("semester_or_Module",
                    "weeks_per_semester_module",
                    "type_of_educational_work",
@@ -76,6 +77,7 @@ func (q *Queries) Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, err
 }
 
 const get_k_w = `-- name: Get_k_w :one
+
 SELECT id, "semester_or_Module", weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, "type_of_PA_or_GIA", course_works, course_projects, "course_Uch_ave_ZE_on_RUP", "pr_ZE_on_RUP", "NIR_ZE_by_RUP"
 FROM k_w
 WHERE "id" = $1

@@ -10,6 +10,7 @@ import (
 )
 
 const create_information_about_PPS = `-- name: Create_information_about_PPS :one
+
 INSERT INTO "information_about_PPS" ("department",
                                      "post",
                                      "terms_of_attraction",
@@ -48,6 +49,7 @@ func (q *Queries) Create_information_about_PPS(ctx context.Context, arg Create_i
 }
 
 const get_information_about_PPS = `-- name: Get_information_about_PPS :many
+
 select distinct full_name ,department,post,terms_of_attraction from "information_about_PPS"
 `
 

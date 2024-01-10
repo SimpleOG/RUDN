@@ -1,4 +1,5 @@
 -- name: Create_the_amount_of_teaching_work_of_the_teaching_staff :one
+
 INSERT INTO "the_amount_of_teaching_work_of_the_teaching_staff" (
                                                                  "lectures",
                                                                  "practice_or_Seminars",
@@ -23,6 +24,7 @@ INSERT INTO "the_amount_of_teaching_work_of_the_teaching_staff" (
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19,$20) RETURNING *;
 
 -- name: Get_the_amount_of_teaching_work_of_the_teaching_staff :one
+
 SELECT *
 FROM the_amount_of_teaching_work_of_the_teaching_staff
 WHERE id = $1

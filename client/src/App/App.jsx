@@ -4,7 +4,7 @@ import {Link, Route, Routes} from "react-router-dom";
 import HomePage from "../components/homepage/homepage";
 import Teachers from "../components/teacher/teachers";
 import Navbar from "../components/navbar/navbar";
-import Groups from "../components/groups/groups";
+import Courses from "../components/courses/courses";
 
 const App = () => {
     return (
@@ -12,9 +12,9 @@ const App = () => {
                 <Navbar />
                 <Routes>
                     <Route path={"/"} element={<HomePage/>}/>
-                    <Route path={"/all_teachers"} element={<Teachers/>}/>
-                    <Route path={"/all_groups"} element={<Groups/>}/>
-                    <Route path={"/all_courses"} element={<Teachers/>}/>
+                    <Route path={"/teachers/:name?"} element={<Teachers/>}/>
+                    <Route path={"/groups"} element={<Courses/>}/>
+                    <Route path={"/courses"} element={<Teachers/>}/>
                 </Routes>
                 <div className="block-hidden"></div>
             </div>

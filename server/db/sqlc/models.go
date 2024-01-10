@@ -87,10 +87,10 @@ type TheContingentOfStudent struct {
 }
 
 type Together struct {
-	ProgramName    string `json:"program_name"`
-	DisciplineName string `json:"discipline_name"`
-	TeacherName    string `json:"teacher_name"`
-	GroupName      string `json:"group_name"`
-	KWID           int32  `json:"k_w_id"`
-	AmountID       int32  `json:"amount_id"`
+	ProgramID    int32 `json:"program_id"`
+	DisciplineID int32 `json:"discipline_id"`
+	TeacherID    int32 `json:"teacher_id"`
+	GroupID      int32 `json:"group_id"`
+	KWID         int32 `json:"k_w_id"`
+	AmountID     int32 `json:"amount_id"`
 }

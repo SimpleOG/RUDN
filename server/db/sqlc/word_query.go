@@ -4,6 +4,7 @@ type WordQuery interface {
 	ReadItAll() error
 	FillTeacherHours(name string) error
 	FillWord(name string) (string, string, error)
+	FillTables() error
 }
 
 var _ WordQuery = (*Queries)(nil)

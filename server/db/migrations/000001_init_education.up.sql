@@ -5,7 +5,6 @@ CREATE TABLE "educational_program"
     "direction_code"           varchar NOT NULL,
     "name_of_the_program"      varchar NOT NULL
 );
-
 CREATE TABLE "discipline_or_type_of_academic_work"
 (
     id                                                serial  not null primary key,
@@ -15,7 +14,6 @@ CREATE TABLE "discipline_or_type_of_academic_work"
     "dop_info"                                        varchar NOT NULL,
     "name_of_the_discipline_or_type_of_academic_work" varchar NOT NULL
 );
-
 CREATE TABLE "information_about_PPS"
 (
     id                    serial  not null primary key,
@@ -26,7 +24,6 @@ CREATE TABLE "information_about_PPS"
     "a_special_feature"   varchar NOT NULL
 
 );
-
 CREATE TABLE "the_contingent_of_students"
 (
     id             serial  not null primary key,
@@ -86,22 +83,12 @@ CREATE TABLE "the_amount_of_teaching_work_of_the_teaching_staff"
     "total"                                                float not null
 
 );
-
-CREATE TABLE together
+CREATE TABLE "together"
 (
-    program_name    varchar not null,
-    discipline_name varchar not null,
-    teacher_name    varchar not null,
-    group_name      varchar not null,
-    k_w_id          integer not null,
-    amount_id     integer not null
-
+    program_id    integer references educational_program ("id") not null ,
+    discipline_id integer references discipline_or_type_of_academic_work ("id")not null,
+    teacher_id    integer references "information_about_PPS" ("id")not null,
+    group_id     integer references the_contingent_of_students ("id")not null,
+    k_w_id          integer references k_w (id) not null,
+    amount_id       integer references the_amount_of_teaching_work_of_the_teaching_staff (id) not null
 );
-
-
-
-
-
-
-
-

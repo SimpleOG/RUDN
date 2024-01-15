@@ -1,10 +1,13 @@
 package db
 
 import (
+	"context"
+	"fmt"
 	docx2 "github.com/gingfrederik/docx"
 	"github.com/lukasjarosch/go-docx"
 	"os"
 	"path/filepath"
+	"time"
 	"unicode"
 )
 
@@ -42,30 +45,30 @@ func (qur *Queries) FillWord(name string) (string, string, error) {
 }
 
 func (qur *Queries) FillTeacherHours(name string) error {
-	//data, err := qur.Teacher_Info(context.Background(), name)
-	//if err != nil {
-	//	return err
-	//}
-	//m := docx.PlaceholderMap{
-	//	"FIO":          data.TeacherName,
-	//	"Lector_Hour":  data.Lectures,
-	//	"Seminar_Hour": data.Practice,
-	//	"Lab_Hour":     data.Labs,
-	//	"Total":        fmt.Sprintf("%.2f", data.Total),
-	//	"year":         time.Now().Year(),
-	//}
-	//doc, err := docx.Open(Tway + "СправкаПример.docx")
-	//if err != nil {
-	//	return err
-	//}
-	//err = doc.ReplaceAll(m)
-	//if err != nil {
-	//	return err
-	//}
-	//err = MakeDoc(data.TeacherName+"_часы.docx", doc)
-	//if err != nil {
-	//	return err
-	//}
+	data, err := qur.Teacher_Info(context.Background(), name)
+	if err != nil {
+		return err
+	}
+	m := docx.PlaceholderMap{
+		"FIO":          data.FullName,
+		"Lector_Hour":  data.Lectures,
+		"Seminar_Hour": data.Practice,
+		"Lab_Hour":     data.Labs,
+		"Total":        fmt.Sprintf("%.2f", data.Total),
+		"year":         time.Now().Year(),
+	}
+	doc, err := docx.Open(Tway + "СправкаПример.docx")
+	if err != nil {
+		return err
+	}
+	err = doc.ReplaceAll(m)
+	if err != nil {
+		return err
+	}
+	err = MakeDoc(data.FullName+"_часы.docx", doc)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

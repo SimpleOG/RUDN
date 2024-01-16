@@ -34,11 +34,11 @@ func (s *Server) setupRouter() {
 		}
 	}())
 	router.GET("/teacher/:name", s.TeacherHours)
-	router.GET("/hello", s.SayHello)
+
 	//router.GET("/course/:name", s.GetCourseInfo)
 	router.GET("/teachers", s.GetTeachers)
 	router.GET("/fill", s.Fill)
-	router.GET("/getWordFile/:name", s.DownloadFile)
+	router.POST("/getWordFile/:name", s.DownloadFile)
 	router.GET("/course/:name", s.ListAllTeachersDisciplines)
 	router.GET("/groups/:name", s.MockGroupData)
 
@@ -47,10 +47,6 @@ func (s *Server) setupRouter() {
 
 func (s *Server) Start(address string) error {
 	return s.router.Run(address)
-}
-
-func (s *Server) SayHello(ctx *gin.Context) {
-	ctx.JSON(200, GoodResponse())
 }
 
 func (s *Server) Fill(ctx *gin.Context) {

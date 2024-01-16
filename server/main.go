@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -14,7 +15,7 @@ import (
 )
 
 func main() {
-	//gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	config, err := util.InitConfig(".")
 	if err != nil {
 		log.Fatalf("cannot load config %s", err)
@@ -28,8 +29,8 @@ func main() {
 	if err != nil {
 		log.Fatalln("cannot create api : ", err)
 	}
-	//runDBMigration(config.MigrationUrl, config.DBDSource)
-
+	runDBMigration(config.MigrationUrl, config.DBDSource)
+	//store.ReadItAll()
 	err = serv.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatalln("cannot start api : ", err)
@@ -61,3 +62,5 @@ func StopDBMigration(migrationURL, dbSource string) {
 	}
 
 }
+
+//["id", "lectures", "dnudwvn"]

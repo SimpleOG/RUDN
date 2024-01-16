@@ -1,0 +1,34 @@
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.opened {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 10;
+}
+
+.overlay {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 60%);
+}
+
+.contentModal {
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    width: 60%;
+    min-height: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+

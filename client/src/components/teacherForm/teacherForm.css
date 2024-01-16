@@ -1,0 +1,16 @@
+.checkBoxesContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.checkBoxItem {
+    flex-basis: 20%;
+    margin: 10px 20px;
+}
+
+.sendFormButtons {
+    display: flex;
+    justify-content: center;
+}

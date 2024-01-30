@@ -10,7 +10,6 @@ const TeacherForm = ({ data, onChange, onSubmit, onClick }) => {
     for (let i = 0; i < cropAmount; i++) {
         tempAr.push(i);
     }
-
     const dataCrop = (data, cropSize, currIndex) => {
         const startIndex = currIndex * cropSize;
         return [...data].splice(startIndex, cropSize);
@@ -44,7 +43,7 @@ const TeacherForm = ({ data, onChange, onSubmit, onClick }) => {
                     name="doc"
                     onClick={onClick}
                 >
-                    Send doc
+                    Save doc
                 </button>
             </div>
         </form>

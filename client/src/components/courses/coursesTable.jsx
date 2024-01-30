@@ -11,10 +11,15 @@ const CoursesTable = ({ courses }) => {
             name: "Тип академической работы",
             path: "type_of_educational_work"
         },
+        group: {
+            name: "Название группы ",
+            path: "group_name"
+        },
         total: {
             name: "Всего часов ",
             path: "total"
         },
+
 
     }
 

@@ -12,37 +12,37 @@ import (
 const create_Discipline_or_type_of_academic_work = `-- name: Create_Discipline_or_type_of_academic_work :one
 
 INSERT INTO "discipline_or_type_of_academic_work" (
-               "block",
-               "component",
-               "n_v_RUP",
-               "name_of_the_discipline_or_type_of_academic_work",
-               "dop_info")
+              "block"                                          ,
+              "component"                                      ,
+              "n_v_rup"                                        ,
+              "dop_info"                                       ,
+              "name_of_the_discipline_or_type_of_academic_work")
 VALUES ($1, $2, $3, $4,$5)
-RETURNING id, block, component, "n_v_RUP", dop_info, name_of_the_discipline_or_type_of_academic_work
+RETURNING id, block, component, n_v_rup, dop_info, name_of_the_discipline_or_type_of_academic_work
 `
 
 type Create_Discipline_or_type_of_academic_workParams struct {
 	Block                                   string `json:"block"`
 	Component                               string `json:"component"`
-	NVRUP                                   string `json:"n_v_RUP"`
-	NameOfTheDisciplineOrTypeOfAcademicWork string `json:"name_of_the_discipline_or_type_of_academic_work"`
+	NVRup                                   string `json:"n_v_rup"`
 	DopInfo                                 string `json:"dop_info"`
+	NameOfTheDisciplineOrTypeOfAcademicWork string `json:"name_of_the_discipline_or_type_of_academic_work"`
 }
 
 func (q *Queries) Create_Discipline_or_type_of_academic_work(ctx context.Context, arg Create_Discipline_or_type_of_academic_workParams) (DisciplineOrTypeOfAcademicWork, error) {
 	row := q.db.QueryRow(ctx, create_Discipline_or_type_of_academic_work,
 		arg.Block,
 		arg.Component,
-		arg.NVRUP,
-		arg.NameOfTheDisciplineOrTypeOfAcademicWork,
+		arg.NVRup,
 		arg.DopInfo,
+		arg.NameOfTheDisciplineOrTypeOfAcademicWork,
 	)
 	var i DisciplineOrTypeOfAcademicWork
 	err := row.Scan(
 		&i.ID,
 		&i.Block,
 		&i.Component,
-		&i.NVRUP,
+		&i.NVRup,
 		&i.DopInfo,
 		&i.NameOfTheDisciplineOrTypeOfAcademicWork,
 	)
@@ -51,7 +51,7 @@ func (q *Queries) Create_Discipline_or_type_of_academic_work(ctx context.Context
 
 const get_Discipline_or_type_of_academic_work = `-- name: Get_Discipline_or_type_of_academic_work :one
 
-SELECT id, block, component, "n_v_RUP", dop_info, name_of_the_discipline_or_type_of_academic_work
+SELECT id, block, component, n_v_rup, dop_info, name_of_the_discipline_or_type_of_academic_work
 FROM "discipline_or_type_of_academic_work"
 WHERE "id" = $1
 LIMIT 1
@@ -64,7 +64,7 @@ func (q *Queries) Get_Discipline_or_type_of_academic_work(ctx context.Context, i
 		&i.ID,
 		&i.Block,
 		&i.Component,
-		&i.NVRUP,
+		&i.NVRup,
 		&i.DopInfo,
 		&i.NameOfTheDisciplineOrTypeOfAcademicWork,
 	)
@@ -73,17 +73,19 @@ func (q *Queries) Get_Discipline_or_type_of_academic_work(ctx context.Context, i
 
 const list_All_Teacher_Disciplines = `-- name: List_All_Teacher_Disciplines :many
 
-SELECT  type_of_educational_work,name_of_the_discipline_or_type_of_academic_work,total from discipline_or_type_of_academic_work d
+SELECT  type_of_educational_work,name_of_the_discipline_or_type_of_academic_work,total,group_name from discipline_or_type_of_academic_work d
 join together t on d.id = t.discipline_id
 join k_w kw on t.k_w_id = kw.id
 join the_amount_of_teaching_work_of_the_teaching_staff taotwotts on t.amount_id = taotwotts.id
 join "information_about_PPS" iaP on iaP.id = t.teacher_id and iap.full_name=$1
+join the_contingent_of_students tcos on t.group_id = tcos.id
 `
 
 type List_All_Teacher_DisciplinesRow struct {
 	TypeOfEducationalWork                   string  `json:"type_of_educational_work"`
 	NameOfTheDisciplineOrTypeOfAcademicWork string  `json:"name_of_the_discipline_or_type_of_academic_work"`
 	Total                                   float64 `json:"total"`
+	GroupName                               string  `json:"group_name"`
 }
 
 func (q *Queries) List_All_Teacher_Disciplines(ctx context.Context, fullName string) ([]List_All_Teacher_DisciplinesRow, error) {
@@ -95,7 +97,12 @@ func (q *Queries) List_All_Teacher_Disciplines(ctx context.Context, fullName str
 	items := []List_All_Teacher_DisciplinesRow{}
 	for rows.Next() {
 		var i List_All_Teacher_DisciplinesRow
-		if err := rows.Scan(&i.TypeOfEducationalWork, &i.NameOfTheDisciplineOrTypeOfAcademicWork, &i.Total); err != nil {
+		if err := rows.Scan(
+			&i.TypeOfEducationalWork,
+			&i.NameOfTheDisciplineOrTypeOfAcademicWork,
+			&i.Total,
+			&i.GroupName,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)

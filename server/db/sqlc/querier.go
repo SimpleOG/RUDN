@@ -11,6 +11,7 @@ import (
 type Querier interface {
 	Create_Discipline_or_type_of_academic_work(ctx context.Context, arg Create_Discipline_or_type_of_academic_workParams) (DisciplineOrTypeOfAcademicWork, error)
 	Create_EducationalProgram(ctx context.Context, arg Create_EducationalProgramParams) (EducationalProgram, error)
+	Create_Semester(ctx context.Context, arg Create_SemesterParams) (Semester, error)
 	Create_information_about_PPS(ctx context.Context, arg Create_information_about_PPSParams) (InformationAboutPP, error)
 	Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, error)
 	Create_the_amount_of_teaching_work_of_the_teaching_staff(ctx context.Context, arg Create_the_amount_of_teaching_work_of_the_teaching_staffParams) (TheAmountOfTeachingWorkOfTheTeachingStaff, error)
@@ -18,6 +19,7 @@ type Querier interface {
 	Create_together(ctx context.Context, arg Create_togetherParams) (Together, error)
 	Get_Discipline_or_type_of_academic_work(ctx context.Context, id int32) (DisciplineOrTypeOfAcademicWork, error)
 	Get_EducationalProgram(ctx context.Context, id int32) (EducationalProgram, error)
+	Get_Semester(ctx context.Context, id int32) (Semester, error)
 	Get_information_about_PPS(ctx context.Context) ([]Get_information_about_PPSRow, error)
 	Get_k_w(ctx context.Context, id int32) (KW, error)
 	Get_the_amount_of_teaching_work_of_the_teaching_staff(ctx context.Context, id int32) (TheAmountOfTeachingWorkOfTheTeachingStaff, error)

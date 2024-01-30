@@ -11,26 +11,26 @@ import (
 
 const create_EducationalProgram = `-- name: Create_EducationalProgram :one
 
-INSERT INTO "educational_program" ("the_code_of_the_OOP_RUDN",
+INSERT INTO "educational_program" ("the_code_of_the_oop_rudn",
                                    "direction_code",
                                    "name_of_the_program")
 
 VALUES ($1, $2, $3)
-RETURNING id, "the_code_of_the_OOP_RUDN", direction_code, name_of_the_program
+RETURNING id, the_code_of_the_oop_rudn, direction_code, name_of_the_program
 `
 
 type Create_EducationalProgramParams struct {
-	TheCodeOfTheOOPRUDN string `json:"the_code_of_the_OOP_RUDN"`
+	TheCodeOfTheOopRudn string `json:"the_code_of_the_oop_rudn"`
 	DirectionCode       string `json:"direction_code"`
 	NameOfTheProgram    string `json:"name_of_the_program"`
 }
 
 func (q *Queries) Create_EducationalProgram(ctx context.Context, arg Create_EducationalProgramParams) (EducationalProgram, error) {
-	row := q.db.QueryRow(ctx, create_EducationalProgram, arg.TheCodeOfTheOOPRUDN, arg.DirectionCode, arg.NameOfTheProgram)
+	row := q.db.QueryRow(ctx, create_EducationalProgram, arg.TheCodeOfTheOopRudn, arg.DirectionCode, arg.NameOfTheProgram)
 	var i EducationalProgram
 	err := row.Scan(
 		&i.ID,
-		&i.TheCodeOfTheOOPRUDN,
+		&i.TheCodeOfTheOopRudn,
 		&i.DirectionCode,
 		&i.NameOfTheProgram,
 	)
@@ -39,7 +39,7 @@ func (q *Queries) Create_EducationalProgram(ctx context.Context, arg Create_Educ
 
 const get_EducationalProgram = `-- name: Get_EducationalProgram :one
 
-SELECT id, "the_code_of_the_OOP_RUDN", direction_code, name_of_the_program
+SELECT id, the_code_of_the_oop_rudn, direction_code, name_of_the_program
 FROM educational_program
 WHERE "id" = $1
 LIMIT 1
@@ -50,7 +50,7 @@ func (q *Queries) Get_EducationalProgram(ctx context.Context, id int32) (Educati
 	var i EducationalProgram
 	err := row.Scan(
 		&i.ID,
-		&i.TheCodeOfTheOOPRUDN,
+		&i.TheCodeOfTheOopRudn,
 		&i.DirectionCode,
 		&i.NameOfTheProgram,
 	)

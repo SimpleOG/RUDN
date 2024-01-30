@@ -6,11 +6,11 @@ INSERT INTO "the_contingent_of_students"("group_name",
                                          "of_groups",
                                          "subgroups",
                                          "total_people",
-                                         "RF",
+                                         "rf",
                                          "foreign",
                                          "standard",
                                          "calculated",
-                                         "PK")
+                                         "pk")
 VALUES ($1  ||'-'|| $2, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 RETURNING *;
 

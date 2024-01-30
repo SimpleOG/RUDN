@@ -17,13 +17,13 @@ INSERT INTO "the_contingent_of_students"("group_name",
                                          "of_groups",
                                          "subgroups",
                                          "total_people",
-                                         "RF",
+                                         "rf",
                                          "foreign",
                                          "standard",
                                          "calculated",
-                                         "PK")
+                                         "pk")
 VALUES ($1  ||'-'|| $2, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-RETURNING id, group_name, code, group_number, of_groups, subgroups, total_people, "RF", "foreign", standard, calculated, "PK"
+RETURNING id, group_name, code, group_number, of_groups, subgroups, total_people, rf, "foreign", standard, calculated, pk
 `
 
 type Create_the_contingent_of_studentsParams struct {
@@ -32,11 +32,11 @@ type Create_the_contingent_of_studentsParams struct {
 	OfGroups    string `json:"of_groups"`
 	Subgroups   string `json:"subgroups"`
 	TotalPeople string `json:"total_people"`
-	RF          string `json:"RF"`
+	Rf          string `json:"rf"`
 	Foreign     string `json:"foreign"`
 	Standard    string `json:"standard"`
 	Calculated  string `json:"calculated"`
-	PK          string `json:"PK"`
+	Pk          string `json:"pk"`
 }
 
 func (q *Queries) Create_the_contingent_of_students(ctx context.Context, arg Create_the_contingent_of_studentsParams) (TheContingentOfStudent, error) {
@@ -46,11 +46,11 @@ func (q *Queries) Create_the_contingent_of_students(ctx context.Context, arg Cre
 		arg.OfGroups,
 		arg.Subgroups,
 		arg.TotalPeople,
-		arg.RF,
+		arg.Rf,
 		arg.Foreign,
 		arg.Standard,
 		arg.Calculated,
-		arg.PK,
+		arg.Pk,
 	)
 	var i TheContingentOfStudent
 	err := row.Scan(
@@ -61,18 +61,18 @@ func (q *Queries) Create_the_contingent_of_students(ctx context.Context, arg Cre
 		&i.OfGroups,
 		&i.Subgroups,
 		&i.TotalPeople,
-		&i.RF,
+		&i.Rf,
 		&i.Foreign,
 		&i.Standard,
 		&i.Calculated,
-		&i.PK,
+		&i.Pk,
 	)
 	return i, err
 }
 
 const get_the_contingent_of_students = `-- name: Get_the_contingent_of_students :one
 
-SELECT id, group_name, code, group_number, of_groups, subgroups, total_people, "RF", "foreign", standard, calculated, "PK"
+SELECT id, group_name, code, group_number, of_groups, subgroups, total_people, rf, "foreign", standard, calculated, pk
 FROM the_contingent_of_students
 WHERE "id" = $1
 LIMIT 1
@@ -89,11 +89,11 @@ func (q *Queries) Get_the_contingent_of_students(ctx context.Context, id int32) 
 		&i.OfGroups,
 		&i.Subgroups,
 		&i.TotalPeople,
-		&i.RF,
+		&i.Rf,
 		&i.Foreign,
 		&i.Standard,
 		&i.Calculated,
-		&i.PK,
+		&i.Pk,
 	)
 	return i, err
 }

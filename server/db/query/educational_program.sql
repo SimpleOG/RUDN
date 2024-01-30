@@ -1,6 +1,6 @@
 -- name: Create_EducationalProgram :one
 
-INSERT INTO "educational_program" ("the_code_of_the_OOP_RUDN",
+INSERT INTO "educational_program" ("the_code_of_the_oop_rudn",
                                    "direction_code",
                                    "name_of_the_program")
 

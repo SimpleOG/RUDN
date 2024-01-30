@@ -11,35 +11,35 @@ import (
 
 const create_k_w = `-- name: Create_k_w :one
 
-INSERT INTO "k_w" ("semester_or_Module",
+INSERT INTO "k_w" ("semester_or_module",
                    "weeks_per_semester_module",
                    "type_of_educational_work",
                    "lecture_hours",
                    "laboratories_hours",
                    "practise_hours",
-                   "type_of_PA_or_GIA",
+                   "type_of_pa_or_gia",
                    "course_works",
                    "course_projects",
-                   "course_Uch_ave_ZE_on_RUP",
-                   "pr_ZE_on_RUP",
-                   "NIR_ZE_by_RUP")
+                   "course_uch_ave_ze_on_rup",
+                   "pr_ze_on_rup",
+                   "nir_ze_by_rup")
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-RETURNING id, "semester_or_Module", weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, "type_of_PA_or_GIA", course_works, course_projects, "course_Uch_ave_ZE_on_RUP", "pr_ZE_on_RUP", "NIR_ZE_by_RUP"
+RETURNING id, semester_or_module, weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, type_of_pa_or_gia, course_works, course_projects, course_uch_ave_ze_on_rup, pr_ze_on_rup, nir_ze_by_rup
 `
 
 type Create_k_wParams struct {
-	SemesterOrModule       string `json:"semester_or_Module"`
+	SemesterOrModule       string `json:"semester_or_module"`
 	WeeksPerSemesterModule int32  `json:"weeks_per_semester_module"`
 	TypeOfEducationalWork  string `json:"type_of_educational_work"`
 	LectureHours           int32  `json:"lecture_hours"`
 	LaboratoriesHours      int32  `json:"laboratories_hours"`
 	PractiseHours          int32  `json:"practise_hours"`
-	TypeOfPAOrGIA          string `json:"type_of_PA_or_GIA"`
+	TypeOfPaOrGia          string `json:"type_of_pa_or_gia"`
 	CourseWorks            string `json:"course_works"`
 	CourseProjects         string `json:"course_projects"`
-	CourseUchAveZEOnRUP    string `json:"course_Uch_ave_ZE_on_RUP"`
-	PrZEOnRUP              string `json:"pr_ZE_on_RUP"`
-	NIRZEByRUP             string `json:"NIR_ZE_by_RUP"`
+	CourseUchAveZeOnRup    string `json:"course_uch_ave_ze_on_rup"`
+	PrZeOnRup              string `json:"pr_ze_on_rup"`
+	NirZeByRup             string `json:"nir_ze_by_rup"`
 }
 
 func (q *Queries) Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, error) {
@@ -50,12 +50,12 @@ func (q *Queries) Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, err
 		arg.LectureHours,
 		arg.LaboratoriesHours,
 		arg.PractiseHours,
-		arg.TypeOfPAOrGIA,
+		arg.TypeOfPaOrGia,
 		arg.CourseWorks,
 		arg.CourseProjects,
-		arg.CourseUchAveZEOnRUP,
-		arg.PrZEOnRUP,
-		arg.NIRZEByRUP,
+		arg.CourseUchAveZeOnRup,
+		arg.PrZeOnRup,
+		arg.NirZeByRup,
 	)
 	var i KW
 	err := row.Scan(
@@ -66,19 +66,19 @@ func (q *Queries) Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, err
 		&i.LectureHours,
 		&i.LaboratoriesHours,
 		&i.PractiseHours,
-		&i.TypeOfPAOrGIA,
+		&i.TypeOfPaOrGia,
 		&i.CourseWorks,
 		&i.CourseProjects,
-		&i.CourseUchAveZEOnRUP,
-		&i.PrZEOnRUP,
-		&i.NIRZEByRUP,
+		&i.CourseUchAveZeOnRup,
+		&i.PrZeOnRup,
+		&i.NirZeByRup,
 	)
 	return i, err
 }
 
 const get_k_w = `-- name: Get_k_w :one
 
-SELECT id, "semester_or_Module", weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, "type_of_PA_or_GIA", course_works, course_projects, "course_Uch_ave_ZE_on_RUP", "pr_ZE_on_RUP", "NIR_ZE_by_RUP"
+SELECT id, semester_or_module, weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, type_of_pa_or_gia, course_works, course_projects, course_uch_ave_ze_on_rup, pr_ze_on_rup, nir_ze_by_rup
 FROM k_w
 WHERE "id" = $1
 LIMIT 1
@@ -95,12 +95,12 @@ func (q *Queries) Get_k_w(ctx context.Context, id int32) (KW, error) {
 		&i.LectureHours,
 		&i.LaboratoriesHours,
 		&i.PractiseHours,
-		&i.TypeOfPAOrGIA,
+		&i.TypeOfPaOrGia,
 		&i.CourseWorks,
 		&i.CourseProjects,
-		&i.CourseUchAveZEOnRUP,
-		&i.PrZEOnRUP,
-		&i.NIRZEByRUP,
+		&i.CourseUchAveZeOnRup,
+		&i.PrZeOnRup,
+		&i.NirZeByRup,
 	)
 	return i, err
 }

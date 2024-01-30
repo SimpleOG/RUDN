@@ -11,50 +11,50 @@ import (
 
 const create_the_amount_of_teaching_work_of_the_teaching_staff = `-- name: Create_the_amount_of_teaching_work_of_the_teaching_staff :one
 
-INSERT INTO "the_amount_of_teaching_work_of_the_teaching_staff" (
-                                                                 "lectures",
-                                                                 "practice_or_Seminars",
-                                                                 "Lab_works_or_Clinical_classes",
+INSERT INTO "the_amount_of_teaching_work_of_the_teaching_staff" ("lectures",
+                                                                 "practice_or_seminars",
+                                                                 "lab_works_or_clinical_classes",
                                                                  "current_control",
-                                                                 "interim_certification_PO_for_BRS",
-                                                                 "registration_of_PA_results",
+                                                                 "interim_certification_po_for_brs",
+                                                                 "registration_of_pa_results",
                                                                  "ongoing_consultations_on_the_discipline",
                                                                  "course_works",
                                                                  "course_projects",
                                                                  "educational_practice",
                                                                  "proc_pedagogical_and_pre_graduate_practices",
-                                                                 "NIR",
+                                                                 "nir",
                                                                  "practices_including_research_of_digital_magistracies",
                                                                  "reviewing_the_abstracts_of_graduate_students",
                                                                  "candidates_exam",
                                                                  "scientific_guidance",
-                                                                 "the_leadership_of_the_WRC_or_the_NKR",
-                                                                 "review_of_the_WRC",
-                                                                 "GEK" ,
+                                                                 "the_leadership_of_the_wrc_or_the_nkr",
+                                                                 "review_of_the_wrc",
+                                                                 "gek",
                                                                  "total")
-VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19,$20) RETURNING id, lectures, "practice_or_Seminars", "Lab_works_or_Clinical_classes", current_control, "interim_certification_PO_for_BRS", "registration_of_PA_results", ongoing_consultations_on_the_discipline, course_works, course_projects, educational_practice, proc_pedagogical_and_pre_graduate_practices, "NIR", practices_including_research_of_digital_magistracies, reviewing_the_abstracts_of_graduate_students, candidates_exam, scientific_guidance, "the_leadership_of_the_WRC_or_the_NKR", "review_of_the_WRC", "GEK", total
+VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+RETURNING id, lectures, practice_or_seminars, lab_works_or_clinical_classes, current_control, interim_certification_po_for_brs, registration_of_pa_results, ongoing_consultations_on_the_discipline, course_works, course_projects, educational_practice, proc_pedagogical_and_pre_graduate_practices, nir, practices_including_research_of_digital_magistracies, reviewing_the_abstracts_of_graduate_students, candidates_exam, scientific_guidance, the_leadership_of_the_wrc_or_the_nkr, review_of_the_wrc, gek, total
 `
 
 type Create_the_amount_of_teaching_work_of_the_teaching_staffParams struct {
 	Lectures                                        float64 `json:"lectures"`
-	PracticeOrSeminars                              float64 `json:"practice_or_Seminars"`
-	LabWorksOrClinicalClasses                       float64 `json:"Lab_works_or_Clinical_classes"`
+	PracticeOrSeminars                              float64 `json:"practice_or_seminars"`
+	LabWorksOrClinicalClasses                       float64 `json:"lab_works_or_clinical_classes"`
 	CurrentControl                                  float64 `json:"current_control"`
-	InterimCertificationPOForBRS                    float64 `json:"interim_certification_PO_for_BRS"`
-	RegistrationOfPAResults                         float64 `json:"registration_of_PA_results"`
+	InterimCertificationPoForBrs                    float64 `json:"interim_certification_po_for_brs"`
+	RegistrationOfPaResults                         float64 `json:"registration_of_pa_results"`
 	OngoingConsultationsOnTheDiscipline             float64 `json:"ongoing_consultations_on_the_discipline"`
 	CourseWorks                                     float64 `json:"course_works"`
 	CourseProjects                                  float64 `json:"course_projects"`
 	EducationalPractice                             float64 `json:"educational_practice"`
 	ProcPedagogicalAndPreGraduatePractices          float64 `json:"proc_pedagogical_and_pre_graduate_practices"`
-	NIR                                             float64 `json:"NIR"`
+	Nir                                             float64 `json:"nir"`
 	PracticesIncludingResearchOfDigitalMagistracies float64 `json:"practices_including_research_of_digital_magistracies"`
 	ReviewingTheAbstractsOfGraduateStudents         float64 `json:"reviewing_the_abstracts_of_graduate_students"`
 	CandidatesExam                                  float64 `json:"candidates_exam"`
 	ScientificGuidance                              float64 `json:"scientific_guidance"`
-	TheLeadershipOfTheWRCOrTheNKR                   float64 `json:"the_leadership_of_the_WRC_or_the_NKR"`
-	ReviewOfTheWRC                                  float64 `json:"review_of_the_WRC"`
-	GEK                                             float64 `json:"GEK"`
+	TheLeadershipOfTheWrcOrTheNkr                   float64 `json:"the_leadership_of_the_wrc_or_the_nkr"`
+	ReviewOfTheWrc                                  float64 `json:"review_of_the_wrc"`
+	Gek                                             float64 `json:"gek"`
 	Total                                           float64 `json:"total"`
 }
 
@@ -64,21 +64,21 @@ func (q *Queries) Create_the_amount_of_teaching_work_of_the_teaching_staff(ctx c
 		arg.PracticeOrSeminars,
 		arg.LabWorksOrClinicalClasses,
 		arg.CurrentControl,
-		arg.InterimCertificationPOForBRS,
-		arg.RegistrationOfPAResults,
+		arg.InterimCertificationPoForBrs,
+		arg.RegistrationOfPaResults,
 		arg.OngoingConsultationsOnTheDiscipline,
 		arg.CourseWorks,
 		arg.CourseProjects,
 		arg.EducationalPractice,
 		arg.ProcPedagogicalAndPreGraduatePractices,
-		arg.NIR,
+		arg.Nir,
 		arg.PracticesIncludingResearchOfDigitalMagistracies,
 		arg.ReviewingTheAbstractsOfGraduateStudents,
 		arg.CandidatesExam,
 		arg.ScientificGuidance,
-		arg.TheLeadershipOfTheWRCOrTheNKR,
-		arg.ReviewOfTheWRC,
-		arg.GEK,
+		arg.TheLeadershipOfTheWrcOrTheNkr,
+		arg.ReviewOfTheWrc,
+		arg.Gek,
 		arg.Total,
 	)
 	var i TheAmountOfTeachingWorkOfTheTeachingStaff
@@ -88,21 +88,21 @@ func (q *Queries) Create_the_amount_of_teaching_work_of_the_teaching_staff(ctx c
 		&i.PracticeOrSeminars,
 		&i.LabWorksOrClinicalClasses,
 		&i.CurrentControl,
-		&i.InterimCertificationPOForBRS,
-		&i.RegistrationOfPAResults,
+		&i.InterimCertificationPoForBrs,
+		&i.RegistrationOfPaResults,
 		&i.OngoingConsultationsOnTheDiscipline,
 		&i.CourseWorks,
 		&i.CourseProjects,
 		&i.EducationalPractice,
 		&i.ProcPedagogicalAndPreGraduatePractices,
-		&i.NIR,
+		&i.Nir,
 		&i.PracticesIncludingResearchOfDigitalMagistracies,
 		&i.ReviewingTheAbstractsOfGraduateStudents,
 		&i.CandidatesExam,
 		&i.ScientificGuidance,
-		&i.TheLeadershipOfTheWRCOrTheNKR,
-		&i.ReviewOfTheWRC,
-		&i.GEK,
+		&i.TheLeadershipOfTheWrcOrTheNkr,
+		&i.ReviewOfTheWrc,
+		&i.Gek,
 		&i.Total,
 	)
 	return i, err
@@ -110,7 +110,7 @@ func (q *Queries) Create_the_amount_of_teaching_work_of_the_teaching_staff(ctx c
 
 const get_the_amount_of_teaching_work_of_the_teaching_staff = `-- name: Get_the_amount_of_teaching_work_of_the_teaching_staff :one
 
-SELECT id, lectures, "practice_or_Seminars", "Lab_works_or_Clinical_classes", current_control, "interim_certification_PO_for_BRS", "registration_of_PA_results", ongoing_consultations_on_the_discipline, course_works, course_projects, educational_practice, proc_pedagogical_and_pre_graduate_practices, "NIR", practices_including_research_of_digital_magistracies, reviewing_the_abstracts_of_graduate_students, candidates_exam, scientific_guidance, "the_leadership_of_the_WRC_or_the_NKR", "review_of_the_WRC", "GEK", total
+SELECT id, lectures, practice_or_seminars, lab_works_or_clinical_classes, current_control, interim_certification_po_for_brs, registration_of_pa_results, ongoing_consultations_on_the_discipline, course_works, course_projects, educational_practice, proc_pedagogical_and_pre_graduate_practices, nir, practices_including_research_of_digital_magistracies, reviewing_the_abstracts_of_graduate_students, candidates_exam, scientific_guidance, the_leadership_of_the_wrc_or_the_nkr, review_of_the_wrc, gek, total
 FROM the_amount_of_teaching_work_of_the_teaching_staff
 WHERE id = $1
 LIMIT 1
@@ -125,21 +125,21 @@ func (q *Queries) Get_the_amount_of_teaching_work_of_the_teaching_staff(ctx cont
 		&i.PracticeOrSeminars,
 		&i.LabWorksOrClinicalClasses,
 		&i.CurrentControl,
-		&i.InterimCertificationPOForBRS,
-		&i.RegistrationOfPAResults,
+		&i.InterimCertificationPoForBrs,
+		&i.RegistrationOfPaResults,
 		&i.OngoingConsultationsOnTheDiscipline,
 		&i.CourseWorks,
 		&i.CourseProjects,
 		&i.EducationalPractice,
 		&i.ProcPedagogicalAndPreGraduatePractices,
-		&i.NIR,
+		&i.Nir,
 		&i.PracticesIncludingResearchOfDigitalMagistracies,
 		&i.ReviewingTheAbstractsOfGraduateStudents,
 		&i.CandidatesExam,
 		&i.ScientificGuidance,
-		&i.TheLeadershipOfTheWRCOrTheNKR,
-		&i.ReviewOfTheWRC,
-		&i.GEK,
+		&i.TheLeadershipOfTheWrcOrTheNkr,
+		&i.ReviewOfTheWrc,
+		&i.Gek,
 		&i.Total,
 	)
 	return i, err

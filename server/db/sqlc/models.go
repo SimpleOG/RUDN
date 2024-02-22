@@ -17,6 +17,8 @@ type DisciplineOrTypeOfAcademicWork struct {
 
 type EducationalProgram struct {
 	ID                  int32  `json:"id"`
+	TheFormOfEducation  string `json:"the_form_of_education"`
+	LevelOfOp           string `json:"level_of_op"`
 	TheCodeOfTheOopRudn string `json:"the_code_of_the_oop_rudn"`
 	DirectionCode       string `json:"direction_code"`
 	NameOfTheProgram    string `json:"name_of_the_program"`

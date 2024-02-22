@@ -33,14 +33,14 @@ func cutter(name string, c chan string) <-chan string {
 // FillWord передаю сюда имя и нужные поля. Оно возвращает мне путь к файлу
 func (qur *Queries) FillWord(name string, fields []string) (string, string, error) {
 	f := docx2.NewFile()
-	request, err := qur.TakeInfo(fields, name)
-	if err != nil || request == nil {
-		return "", "", err
-	}
-	for _, v := range request {
-		para := f.AddParagraph()
-		para.AddText(v).Size(22).Color("808080")
-	}
+	err := qur.TakeInfo(fields, name)
+	//if err != nil || request == nil {
+	//	return "", "", err
+	//}
+	//for _, v := range request {
+	//	para := f.AddParagraph()
+	//	para.AddText(v).Size(22).Color("808080")
+	//}
 	para := f.AddParagraph()
 	para.AddText(name).Size(22).Color("808080")
 	name += "_данные.docx"

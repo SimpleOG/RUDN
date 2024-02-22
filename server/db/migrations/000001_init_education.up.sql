@@ -1,6 +1,8 @@
 CREATE TABLE "educational_program"
 (
     id                         serial  not null primary key,
+    the_form_of_education      varchar not null,
+    level_of_op                varchar not null,
     "the_code_of_the_oop_rudn" varchar NOT NULL,
     "direction_code"           varchar NOT NULL,
     "name_of_the_program"      varchar NOT NULL
@@ -85,11 +87,11 @@ CREATE TABLE "the_amount_of_teaching_work_of_the_teaching_staff"
 );
 CREATE TABLE semester
 (
-    id                         serial not null primary key,
+    id                         serial  not null primary key,
     semester_type              varchar not null,
-    auditorium_work            float  not null,
-    pairs_per_week             float  not null,
-    extracurricular_activities float  not null
+    auditorium_work            float   not null,
+    pairs_per_week             float   not null,
+    extracurricular_activities float   not null
 );
 
 CREATE TABLE "together"

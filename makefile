@@ -28,5 +28,7 @@ network:
 	docker network create network
 compose:
 	cd server && docker compose up
-
+proto:
+	python -m  grpc_tools.protoc -I . --python_out=. --grpc_python_out=. generator.proto
+#генерирует прото файлы
 .PHONY:  start_serv compose dockbuild runserv server client createmigration  createdb   postgres createdb dropdb mgd dbtest  sqlc image test start_post

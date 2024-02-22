@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	_ "github.com/jackc/pgtype"
 	"github.com/xuri/excelize/v2"
 	"log"
 	"strconv"
@@ -14,9 +15,11 @@ const (
 	//Образовательная программа
 	//educationForma = iota // Форма обучения
 	//lvlOp                // Уровень ОП
-	c = iota + 2 // Шифр ООП РУДН
-	d            // Код направления
-	e            // Наименование программы
+	a = iota
+	b
+	c // Шифр ООП РУДН
+	d // Код направления
+	e // Наименование программы
 	// Дисциплина или вид учебной  работы
 	f
 	g
@@ -111,6 +114,8 @@ func ReadExcel() ([][]string, error) {
 func (qur *Queries) ReadEducationalProgram(data [][]string) ([size]EducationalProgram, error) {
 	lock := new(sync.Mutex)
 	ma := make(map[int]EducationalProgram)
+	edu_form := data[a]
+	level_op := data[b]
 	theCodeOfTheOOPRUDN := data[c]
 	directionCode := data[d]
 	nameOfTheProgram := data[e]
@@ -119,6 +124,8 @@ func (qur *Queries) ReadEducationalProgram(data [][]string) ([size]EducationalPr
 		wg.Add(1)
 		go func(i int) {
 			arg := Create_EducationalProgramParams{
+				edu_form[i],
+				level_op[i],
 				theCodeOfTheOOPRUDN[i],
 				directionCode[i],
 				nameOfTheProgram[i],
@@ -645,11 +652,11 @@ func (qur *Queries) ReadItAll() error {
 	wg.Wait()
 	return err
 }
-func (qur *Queries) TakeInfo(fields []string, name string) ([]string, error) {
+func (qur *Queries) TakeInfo(fields []string, name string) error {
 	field := ""
 	for i, v := range fields {
 		if i == len(fields)-1 {
-			field += fmt.Sprintf("(%s) ", v)
+			field += fmt.Sprintf("'%s' ", v)
 			continue
 		}
 		field += fmt.Sprintf(" '%s' ,", v)
@@ -664,17 +671,8 @@ func (qur *Queries) TakeInfo(fields []string, name string) ([]string, error) {
 	join educational_program ep on t.program_id = ep.id`
 	rows, err := qur.db.Query(context.Background(), query, name)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	var columns []string
-	fmt.Println(rows.RawValues())
-	var i string
-	for rows.Next() {
-		err := rows.Scan(&i)
-		columns = append(columns, i)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return columns, nil
+	fmt.Println(rows)
+	return nil
 }

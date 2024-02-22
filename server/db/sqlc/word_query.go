@@ -5,7 +5,7 @@ type WordQuery interface {
 	FillTeacherHours(name string) error
 	FillWord(name string, fields []string) (string, string, error)
 	FillTables() error
-	TakeInfo(fields []string, name string) ([]string, error)
+	TakeInfo(fields []string, name string) error
 }
 
 var _ WordQuery = (*Queries)(nil)

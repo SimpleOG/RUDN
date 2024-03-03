@@ -11,6 +11,7 @@ import (
 	"log"
 	"rudnWebApp/api"
 	db "rudnWebApp/db/sqlc"
+	"rudnWebApp/gprcClient"
 	"rudnWebApp/util"
 )
 
@@ -25,12 +26,15 @@ func main() {
 		log.Fatalf("cannot connect to db %s", err)
 	}
 	store := db.NewStore(connPool)
-	serv, err := api.NewServer(config, store)
+	client, err := gprcClient.NewGrpCClient()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	serv, err := api.NewServer(config, store, client)
 	if err != nil {
 		log.Fatalln("cannot create api : ", err)
 	}
 	runDBMigration(config.MigrationUrl, config.DBDSource)
-	//store.ReadItAll()
 	err = serv.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatalln("cannot start api : ", err)

@@ -6,16 +6,16 @@ COPY .. .
 RUN go build -o main main.go
 
 #запуск
-FROM alpine:3.18
+FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
 
 COPY app.env .
 COPY start.sh .
-COPY считать.xlsx .
+COPY ../serverGo/считать.xlsx .
 COPY wait-for.sh .
-COPY ForDownload ./ForDownload 
-COPY db/migrations ./db/migrations
+COPY ../general/ForDownload ./ForDownload
+COPY ../serverGo/db/migrations ./db/migrations
 
 
 EXPOSE 8080

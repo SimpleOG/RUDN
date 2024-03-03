@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package pb;
+option go_package="rudnWebApp/pb";
+service FileGenerator{
+  rpc Generate(GenerateRequest) returns (GenerateResponse);
+}
+message  GenerateRequest{
+  string name=1;
+  repeated MyMap data = 2;
+
+}
+message MyMap {
+  map<string,string> map=1;
+}
+message GenerateResponse{
+  string filepath = 1;
+  string status = 2;
+}

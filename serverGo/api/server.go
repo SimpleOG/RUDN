@@ -5,21 +5,25 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	db "rudnWebApp/db/sqlc"
+	"rudnWebApp/pb"
 	configs "rudnWebApp/util"
 )
 
 // Server структура отвечающая за обслуживание вебсервера
 type Server struct {
-	config configs.Config
-	store  db.Store
-	router *gin.Engine
+	config     configs.Config
+	store      db.Store
+	router     *gin.Engine
+	grpcClient pb.FileGeneratorClient
 }
 
 // NewServer создание сервера и роутинга
-func NewServer(config configs.Config, store db.Store) (*Server, error) {
+func NewServer(config configs.Config, store db.Store, grpcClient pb.FileGeneratorClient) (*Server, error) {
 	server := &Server{
-		config: config,
-		store:  store}
+		config:     config,
+		store:      store,
+		grpcClient: grpcClient,
+	}
 
 	server.setupRouter()
 	return server, nil

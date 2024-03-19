@@ -17,10 +17,11 @@ INSERT INTO "together"(program_id,
                        group_id,
                        teacher_id,
                        k_w_id,
-                       amount_id)
+                       amount_id,
+                       semestr_id)
 
-VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING program_id, discipline_id, teacher_id, group_id, k_w_id, amount_id
+VALUES ($1, $2, $3, $4, $5, $6,$7)
+RETURNING program_id, discipline_id, teacher_id, group_id, k_w_id, amount_id, semestr_id
 `
 
 type Create_togetherParams struct {
@@ -30,6 +31,7 @@ type Create_togetherParams struct {
 	TeacherID    int32 `json:"teacher_id"`
 	KWID         int32 `json:"k_w_id"`
 	AmountID     int32 `json:"amount_id"`
+	SemestrID    int32 `json:"semestr_id"`
 }
 
 func (q *Queries) Create_together(ctx context.Context, arg Create_togetherParams) (Together, error) {
@@ -40,6 +42,7 @@ func (q *Queries) Create_together(ctx context.Context, arg Create_togetherParams
 		arg.TeacherID,
 		arg.KWID,
 		arg.AmountID,
+		arg.SemestrID,
 	)
 	var i Together
 	err := row.Scan(
@@ -49,6 +52,7 @@ func (q *Queries) Create_together(ctx context.Context, arg Create_togetherParams
 		&i.GroupID,
 		&i.KWID,
 		&i.AmountID,
+		&i.SemestrID,
 	)
 	return i, err
 }

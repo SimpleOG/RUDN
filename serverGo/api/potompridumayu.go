@@ -62,36 +62,14 @@ type Response struct {
 	Programname string `json:"name_of_the_program"`
 }
 
-func (s *Server) MockData(ctx *gin.Context) {
-	name := ctx.Param("name")
-	data := make([]Response, 0)
-	for i := 0; i < 10; i++ {
-		data = append(data, Response{
-			Name:        name,
-			Code:        "Привет",
-			Programname: "Пока",
-		})
-	}
-
-	ctx.JSON(200, data)
-}
-
-func (s *Server) MockGroupData(ctx *gin.Context) {
-	name := ctx.Param("name")
-	data := make([]Response, 0)
-	for i := 0; i < 10; i++ {
-		data = append(data, Response{
-			Name:        name,
-			Code:        "Привет Группа",
-			Programname: "Пока группа",
-		})
-	}
-	ctx.JSON(200, data)
-}
-
 func (s *Server) ListAllTeachersDisciplines(ctx *gin.Context) {
 	name := ctx.Param("name")
-	disciplines, err := s.store.List_All_Teacher_Disciplines(ctx, name)
+	semType := ctx.Query("sem_type")
+	arg := db.List_All_Teacher_DisciplinesParams{
+		FullName:     name,
+		SemesterType: semType,
+	}
+	disciplines, err := s.store.List_All_Teacher_Disciplines(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, errorResponse(err))
 	}

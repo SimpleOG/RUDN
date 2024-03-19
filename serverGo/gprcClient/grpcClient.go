@@ -3,10 +3,11 @@ package gprcClient
 import (
 	"google.golang.org/grpc"
 	"rudnWebApp/pb"
+	"rudnWebApp/util"
 )
 
-func NewGrpCClient() (pb.FileGeneratorClient, error) {
-	conn, err := grpc.Dial(":9090", grpc.WithInsecure())
+func NewGrpCClient(config util.Config) (pb.FileGeneratorClient, error) {
+	conn, err := grpc.Dial(config.GrpcServerAddress, grpc.WithInsecure())
 	if err != nil {
 		return nil, err
 	}

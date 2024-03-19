@@ -9,14 +9,11 @@ RUN go build -o main main.go
 FROM alpine:latest
 WORKDIR /app
 COPY --from=builder /app/main .
-
 COPY app.env .
 COPY start.sh .
-COPY ../serverGo/считать.xlsx .
 COPY wait-for.sh .
-COPY ../general/ForDownload ./ForDownload
-COPY ../serverGo/db/migrations ./db/migrations
-
+COPY считать.xlsx .
+COPY db/migrations ./db/migrations
 
 EXPOSE 8080
 CMD  ["/app/main"]

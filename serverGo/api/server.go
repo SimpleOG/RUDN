@@ -48,9 +48,7 @@ func (s *Server) setupRouter() {
 	router.GET("/teachers", s.GetTeachers)
 	router.GET("/fill", s.Fill)
 	router.POST("/getWordFile/:name", s.DownloadFile)
-
 	router.GET("/course/:name", s.ListAllTeachersDisciplines)
-	router.GET("/groups/:name", s.MockGroupData)
 
 	s.router = router
 }

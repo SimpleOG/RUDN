@@ -4,9 +4,10 @@ INSERT INTO "together"(program_id,
                        group_id,
                        teacher_id,
                        k_w_id,
-                       amount_id)
+                       amount_id,
+                       semestr_id)
 
-VALUES ($1, $2, $3, $4, $5, $6)
+VALUES ($1, $2, $3, $4, $5, $6,$7)
 RETURNING *;
 
 -- name: Teacher_Info :one

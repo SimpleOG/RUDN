@@ -26,7 +26,7 @@ func main() {
 		log.Fatalf("cannot connect to db %s", err)
 	}
 	store := db.NewStore(connPool)
-	client, err := gprcClient.NewGrpCClient()
+	client, err := gprcClient.NewGrpCClient(config)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -34,15 +34,15 @@ func main() {
 	if err != nil {
 		log.Fatalln("cannot create api : ", err)
 	}
-	runDBMigration(config.MigrationUrl, config.DBDSource)
+	runDBMigration(config.MigrationUrl, config.DBDSource, store)
+	defer StopDBMigration(config.MigrationUrl, config.DBDSource)
 	err = serv.Start(config.ServerAddress)
 	if err != nil {
 		log.Fatalln("cannot start api : ", err)
 	}
-	//StopDBMigration(config.MigrationUrl, config.DBDSource)
 }
 
-func runDBMigration(migrationURL, dbSource string) {
+func runDBMigration(migrationURL, dbSource string, db db.Store) {
 	migration, err := migrate.New(migrationURL, dbSource)
 	if err != nil {
 		log.Fatalln("cannot create migration", err)
@@ -54,7 +54,10 @@ func runDBMigration(migrationURL, dbSource string) {
 		}
 		log.Fatalln("cannot start migration", err)
 	}
-
+	err = db.ReadItAll()
+	if err != nil {
+		log.Fatalln("cannot start migration", err)
+	}
 }
 func StopDBMigration(migrationURL, dbSource string) {
 	migration, err := migrate.New(migrationURL, dbSource)
@@ -64,7 +67,7 @@ func StopDBMigration(migrationURL, dbSource string) {
 	if err = migration.Down(); err != nil {
 		log.Fatalln("cannot start migration", err)
 	}
-
+	log.Println("stopped")
 }
 
 //["id", "lectures", "dnudwvn"]

@@ -24,7 +24,7 @@ type Querier interface {
 	Get_k_w(ctx context.Context, id int32) (KW, error)
 	Get_the_amount_of_teaching_work_of_the_teaching_staff(ctx context.Context, id int32) (TheAmountOfTeachingWorkOfTheTeachingStaff, error)
 	Get_the_contingent_of_students(ctx context.Context, id int32) (TheContingentOfStudent, error)
-	List_All_Teacher_Disciplines(ctx context.Context, fullName string) ([]List_All_Teacher_DisciplinesRow, error)
+	List_All_Teacher_Disciplines(ctx context.Context, arg List_All_Teacher_DisciplinesParams) ([]List_All_Teacher_DisciplinesRow, error)
 	Teacher_Info(ctx context.Context, fullName string) (Teacher_InfoRow, error)
 }
 

@@ -79,7 +79,13 @@ join k_w kw on t.k_w_id = kw.id
 join the_amount_of_teaching_work_of_the_teaching_staff taotwotts on t.amount_id = taotwotts.id
 join "information_about_PPS" iaP on iaP.id = t.teacher_id and iap.full_name=$1
 join the_contingent_of_students tcos on t.group_id = tcos.id
+join semester s on s.id = t.semestr_id and s.semester_type=$2
 `
+
+type List_All_Teacher_DisciplinesParams struct {
+	FullName     string `json:"full_name"`
+	SemesterType string `json:"semester_type"`
+}
 
 type List_All_Teacher_DisciplinesRow struct {
 	TypeOfEducationalWork                   string  `json:"type_of_educational_work"`
@@ -88,8 +94,8 @@ type List_All_Teacher_DisciplinesRow struct {
 	GroupName                               string  `json:"group_name"`
 }
 
-func (q *Queries) List_All_Teacher_Disciplines(ctx context.Context, fullName string) ([]List_All_Teacher_DisciplinesRow, error) {
-	rows, err := q.db.Query(ctx, list_All_Teacher_Disciplines, fullName)
+func (q *Queries) List_All_Teacher_Disciplines(ctx context.Context, arg List_All_Teacher_DisciplinesParams) ([]List_All_Teacher_DisciplinesRow, error) {
+	rows, err := q.db.Query(ctx, list_All_Teacher_Disciplines, arg.FullName, arg.SemesterType)
 	if err != nil {
 		return nil, err
 	}

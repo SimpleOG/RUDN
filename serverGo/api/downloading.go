@@ -2,7 +2,6 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
@@ -10,11 +9,10 @@ import (
 	"rudnWebApp/pb"
 )
 
-// CreateFileForDownload на страничке преподавателя выбираются поля которые надо видеть
-// фронт отправляет имя преподавателя и поля
-// запрос забирает из бд нужные данные
-// в word файл записываются данные
-// сформированный документ подаётся в хендлер и отправляется клиенту
+type Fields struct {
+	Field []string `json:"array"`
+}
+
 func (s *Server) DownloadFile(ctx *gin.Context) {
 	if ctx.Request.Method == "OPTIONS" {
 		ctx.Writer.WriteHeader(http.StatusOK)
@@ -27,37 +25,31 @@ func (s *Server) DownloadFile(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	filePath, err := s.FillWord(name, arg.Field)
+	filePath, err := s.FillWord(name, &arg.Field)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
-	filename := filepath.Base(filePath)
-	getwd, err := os.Getwd()
-	if err != nil {
-		return
-	}
-	fmt.Println(getwd)
 	data, err := os.ReadFile(filePath)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	ctx.Header("Content-Disposition", "attachment; filename="+filename)
+	ctx.Header("Content-Disposition", "attachment; filename="+filepath.Base(filePath))
 	ctx.Header("Content-Type", "text/plain")
 	ctx.Data(http.StatusOK, "application/msword", data)
 }
 
-type Fields struct {
-	Field []string `json:"array"`
-}
-
 // FillWord передаю сюда имя и нужные поля. Оно возвращает мне путь к файлу
-func (s *Server) FillWord(name string, fields []string) (string, error) {
-
-	err := s.store.TakeInfo(fields, name)
-	response, err := s.grpcClient.Generate(context.Background(), &pb.GenerateRequest{Name: name, Data: fields})
+func (s *Server) FillWord(name string, fields *[]string) (string, error) {
+	rows, err := s.store.TakeInfo(fields, name, "Осенний")
+	req := make([]*pb.MyMap, 0)
+	for i := range rows {
+		req = append(req, &pb.MyMap{Map: rows[i]})
+	}
+	arg := &pb.GenerateRequest{Name: name, Data: req}
+	response, err := s.grpcClient.Generate(context.Background(), arg)
 	if err != nil {
 		return "", err
 	}

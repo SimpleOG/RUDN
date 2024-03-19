@@ -42,8 +42,8 @@ type KW struct {
 	LaboratoriesHours      int32  `json:"laboratories_hours"`
 	PractiseHours          int32  `json:"practise_hours"`
 	TypeOfPaOrGia          string `json:"type_of_pa_or_gia"`
-	CourseWorks            string `json:"course_works"`
-	CourseProjects         string `json:"course_projects"`
+	KwCourseWorks          string `json:"kw_course_works"`
+	KwCourseProjects       string `json:"kw_course_projects"`
 	CourseUchAveZeOnRup    string `json:"course_uch_ave_ze_on_rup"`
 	PrZeOnRup              string `json:"pr_ze_on_rup"`
 	NirZeByRup             string `json:"nir_ze_by_rup"`
@@ -103,4 +103,5 @@ type Together struct {
 	GroupID      int32 `json:"group_id"`
 	KWID         int32 `json:"k_w_id"`
 	AmountID     int32 `json:"amount_id"`
+	SemestrID    int32 `json:"semestr_id"`
 }

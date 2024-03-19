@@ -1,5 +1,5 @@
 createmigration:
-	migrate create -ext sql -dir ./server/db/Migrations -seq new_migration
+	migrate create -ext sql -dir ./serverGo/db/Migrations -seq new_migration
 image:
 	docker pull postgres:12-alpine
 postgres:
@@ -9,26 +9,31 @@ createdb:
 dropdb:
 	docker exec -it postgres dropdb education
 mgu:
-	migrate -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose up
+	migrate -path  ./serverGo/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose up
 mgd:
-	migrate  -path  ./server/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose down
+	migrate  -path  ./serverGo/db/Migrations -database "postgresql://root:1234@localhost:5441/education?sslmode=disable" -verbose down
 sqlc:
-	cd server &&	sqlc generate
+	cd serverGo &&	sqlc generate
 server:
-	cd server && go run main.go
+	cd serverGo && go run main.go
 client:
 	cd client && npm start
 runserv:
-	cd server && docker run --name server --network network -p 8080:8080 -e DB_SOURCE="postgresql://root:1234@postgres:5455/education?sslmode=disable" server
+	docker run --name server --network network -p 8080:8080  server
 dockbuild:
-	cd server && docker build -t server:latest .
+	cd serverGo && docker build -t server:latest .
 test:
 	go test -v -cover ./db/tests
 network:
 	docker network create network
 compose:
-	cd server && docker compose up
+	cd docker && docker compose up --build
 proto:
-	python -m  grpc_tools.protoc -I . --python_out=. --grpc_python_out=. generator.proto
-#генерирует прото файлы
+	cd serverPy  &&python -m  grpc_tools.protoc -I proto --python_out=python/pb --grpc_python_out=python/pb proto/generator.proto
+#после генерации при попытке запуска будет возникать ошибка, исправить заменив импорт в файле from . import generator_pb2 as generator__pb2
+goproto:
+	cd serverGo &&  protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \
+        --go-grpc_out=pb --go-grpc_opt=paths=source_relative \
+        --grpc-gateway_out=pb	--grpc-gateway_opt=paths=source_relative		\
+        proto/*.proto
 .PHONY:  start_serv compose dockbuild runserv server client createmigration  createdb   postgres createdb dropdb mgd dbtest  sqlc image test start_post

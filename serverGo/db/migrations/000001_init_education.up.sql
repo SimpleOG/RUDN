@@ -7,6 +7,7 @@ CREATE TABLE "educational_program"
     "direction_code"           varchar NOT NULL,
     "name_of_the_program"      varchar NOT NULL
 );
+
 CREATE TABLE "discipline_or_type_of_academic_work"
 (
     id                                                serial  not null primary key,
@@ -16,6 +17,7 @@ CREATE TABLE "discipline_or_type_of_academic_work"
     "dop_info"                                        varchar NOT NULL,
     "name_of_the_discipline_or_type_of_academic_work" varchar NOT NULL
 );
+
 CREATE TABLE "information_about_PPS"
 (
     id                    serial  not null primary key,
@@ -52,8 +54,8 @@ CREATE TABLE "k_w"
     "laboratories_hours"        integer NOT NULL,
     "practise_hours"            integer NOT NULL,
     "type_of_pa_or_gia"         varchar NOT NULL,
-    "course_works"              varchar NOT NULL,
-    "course_projects"           varchar NOT NULL,
+    "kw_course_works"              varchar NOT NULL,
+    "kw_course_projects"           varchar NOT NULL,
     "course_uch_ave_ze_on_rup"  varchar NOT NULL,
     "pr_ze_on_rup"              varchar NOT NULL,
     "nir_ze_by_rup"             varchar NOT NULL
@@ -85,6 +87,7 @@ CREATE TABLE "the_amount_of_teaching_work_of_the_teaching_staff"
     "total"                                                float  not null
 
 );
+
 CREATE TABLE semester
 (
     id                         serial  not null primary key,
@@ -101,5 +104,6 @@ CREATE TABLE "together"
     teacher_id    integer references "information_about_PPS" ("id")                         not null,
     group_id      integer references the_contingent_of_students ("id")                      not null,
     k_w_id        integer references k_w (id)                                               not null,
-    amount_id     integer references the_amount_of_teaching_work_of_the_teaching_staff (id) not null
+    amount_id     integer references the_amount_of_teaching_work_of_the_teaching_staff (id) not null,
+    semestr_id    integer references semester (id) not null
 );

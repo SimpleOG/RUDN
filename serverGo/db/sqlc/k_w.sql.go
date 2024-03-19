@@ -18,13 +18,13 @@ INSERT INTO "k_w" ("semester_or_module",
                    "laboratories_hours",
                    "practise_hours",
                    "type_of_pa_or_gia",
-                   "course_works",
-                   "course_projects",
+                   "kw_course_works",
+                   "kw_course_projects",
                    "course_uch_ave_ze_on_rup",
                    "pr_ze_on_rup",
                    "nir_ze_by_rup")
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-RETURNING id, semester_or_module, weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, type_of_pa_or_gia, course_works, course_projects, course_uch_ave_ze_on_rup, pr_ze_on_rup, nir_ze_by_rup
+RETURNING id, semester_or_module, weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, type_of_pa_or_gia, kw_course_works, kw_course_projects, course_uch_ave_ze_on_rup, pr_ze_on_rup, nir_ze_by_rup
 `
 
 type Create_k_wParams struct {
@@ -35,8 +35,8 @@ type Create_k_wParams struct {
 	LaboratoriesHours      int32  `json:"laboratories_hours"`
 	PractiseHours          int32  `json:"practise_hours"`
 	TypeOfPaOrGia          string `json:"type_of_pa_or_gia"`
-	CourseWorks            string `json:"course_works"`
-	CourseProjects         string `json:"course_projects"`
+	KwCourseWorks          string `json:"kw_course_works"`
+	KwCourseProjects       string `json:"kw_course_projects"`
 	CourseUchAveZeOnRup    string `json:"course_uch_ave_ze_on_rup"`
 	PrZeOnRup              string `json:"pr_ze_on_rup"`
 	NirZeByRup             string `json:"nir_ze_by_rup"`
@@ -51,8 +51,8 @@ func (q *Queries) Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, err
 		arg.LaboratoriesHours,
 		arg.PractiseHours,
 		arg.TypeOfPaOrGia,
-		arg.CourseWorks,
-		arg.CourseProjects,
+		arg.KwCourseWorks,
+		arg.KwCourseProjects,
 		arg.CourseUchAveZeOnRup,
 		arg.PrZeOnRup,
 		arg.NirZeByRup,
@@ -67,8 +67,8 @@ func (q *Queries) Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, err
 		&i.LaboratoriesHours,
 		&i.PractiseHours,
 		&i.TypeOfPaOrGia,
-		&i.CourseWorks,
-		&i.CourseProjects,
+		&i.KwCourseWorks,
+		&i.KwCourseProjects,
 		&i.CourseUchAveZeOnRup,
 		&i.PrZeOnRup,
 		&i.NirZeByRup,
@@ -78,7 +78,7 @@ func (q *Queries) Create_k_w(ctx context.Context, arg Create_k_wParams) (KW, err
 
 const get_k_w = `-- name: Get_k_w :one
 
-SELECT id, semester_or_module, weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, type_of_pa_or_gia, course_works, course_projects, course_uch_ave_ze_on_rup, pr_ze_on_rup, nir_ze_by_rup
+SELECT id, semester_or_module, weeks_per_semester_module, type_of_educational_work, lecture_hours, laboratories_hours, practise_hours, type_of_pa_or_gia, kw_course_works, kw_course_projects, course_uch_ave_ze_on_rup, pr_ze_on_rup, nir_ze_by_rup
 FROM k_w
 WHERE "id" = $1
 LIMIT 1
@@ -96,8 +96,8 @@ func (q *Queries) Get_k_w(ctx context.Context, id int32) (KW, error) {
 		&i.LaboratoriesHours,
 		&i.PractiseHours,
 		&i.TypeOfPaOrGia,
-		&i.CourseWorks,
-		&i.CourseProjects,
+		&i.KwCourseWorks,
+		&i.KwCourseProjects,
 		&i.CourseUchAveZeOnRup,
 		&i.PrZeOnRup,
 		&i.NirZeByRup,

@@ -18,10 +18,10 @@ INSERT INTO "together"(program_id,
                        teacher_id,
                        k_w_id,
                        amount_id,
-                       semestr_id)
+                       semester_id)
 
 VALUES ($1, $2, $3, $4, $5, $6,$7)
-RETURNING program_id, discipline_id, teacher_id, group_id, k_w_id, amount_id, semestr_id
+RETURNING program_id, discipline_id, teacher_id, group_id, k_w_id, amount_id, semester_id
 `
 
 type Create_togetherParams struct {
@@ -31,7 +31,7 @@ type Create_togetherParams struct {
 	TeacherID    int32 `json:"teacher_id"`
 	KWID         int32 `json:"k_w_id"`
 	AmountID     int32 `json:"amount_id"`
-	SemestrID    int32 `json:"semestr_id"`
+	SemesterID   int32 `json:"semester_id"`
 }
 
 func (q *Queries) Create_together(ctx context.Context, arg Create_togetherParams) (Together, error) {
@@ -42,7 +42,7 @@ func (q *Queries) Create_together(ctx context.Context, arg Create_togetherParams
 		arg.TeacherID,
 		arg.KWID,
 		arg.AmountID,
-		arg.SemestrID,
+		arg.SemesterID,
 	)
 	var i Together
 	err := row.Scan(
@@ -52,9 +52,57 @@ func (q *Queries) Create_together(ctx context.Context, arg Create_togetherParams
 		&i.GroupID,
 		&i.KWID,
 		&i.AmountID,
-		&i.SemestrID,
+		&i.SemesterID,
 	)
 	return i, err
+}
+
+const list_All_Teacher_Disciplines = `-- name: List_All_Teacher_Disciplines :many
+
+SELECT  type_of_educational_work,name_of_the_discipline_or_type_of_academic_work,total,group_name from discipline_or_type_of_academic_work d
+                                                                                                           join together t on d.id = t.discipline_id
+                                                                                                           join k_w kw on t.k_w_id = kw.id
+                                                                                                           join the_amount_of_teaching_work_of_the_teaching_staff taotwotts on t.amount_id = taotwotts.id
+                                                                                                           join "information_about_pps" iaP on iaP.id = t.teacher_id and iap.full_name=$1
+                                                                                                           join the_contingent_of_students tcos on t.group_id = tcos.id
+                                                                                                           join semester s on s.id = t.semester_id and s.semester_type=$2
+`
+
+type List_All_Teacher_DisciplinesParams struct {
+	FullName     string `json:"full_name"`
+	SemesterType string `json:"semester_type"`
+}
+
+type List_All_Teacher_DisciplinesRow struct {
+	TypeOfEducationalWork                   string  `json:"type_of_educational_work"`
+	NameOfTheDisciplineOrTypeOfAcademicWork string  `json:"name_of_the_discipline_or_type_of_academic_work"`
+	Total                                   float64 `json:"total"`
+	GroupName                               string  `json:"group_name"`
+}
+
+func (q *Queries) List_All_Teacher_Disciplines(ctx context.Context, arg List_All_Teacher_DisciplinesParams) ([]List_All_Teacher_DisciplinesRow, error) {
+	rows, err := q.db.Query(ctx, list_All_Teacher_Disciplines, arg.FullName, arg.SemesterType)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []List_All_Teacher_DisciplinesRow{}
+	for rows.Next() {
+		var i List_All_Teacher_DisciplinesRow
+		if err := rows.Scan(
+			&i.TypeOfEducationalWork,
+			&i.NameOfTheDisciplineOrTypeOfAcademicWork,
+			&i.Total,
+			&i.GroupName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const teacher_Info = `-- name: Teacher_Info :one
@@ -63,7 +111,7 @@ select full_name, department,post,terms_of_attraction,
        round( cast(sum(lectures) as numeric)     ,2 )                     as lectures,
        round( cast(sum("practice_or_seminars") as numeric)  ,2 )          as practice,
        round( cast(sum("lab_works_or_clinical_classes") as numeric) ,2 )  as labs
-from "information_about_PPS" i
+from "information_about_pps" i
          join together t  on  t.teacher_id = i.id
          join the_amount_of_teaching_work_of_the_teaching_staff as a on t.amount_id = a.id
 where i.full_name=$1

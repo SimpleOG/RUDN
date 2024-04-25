@@ -29,7 +29,9 @@ network:
 compose:
 	cd docker && docker compose up --build
 proto:
-	cd serverPy  &&python -m  grpc_tools.protoc -I proto --python_out=python/pb --grpc_python_out=python/pb proto/generator.proto
+	cd serverPy  && python -m  grpc_tools.protoc -I \
+	proto --python_out=python/pb --grpc_python_out=python/pb \
+	proto/generator.proto
 #после генерации при попытке запуска будет возникать ошибка, исправить заменив импорт в файле from . import generator_pb2 as generator__pb2
 goproto:
 	cd serverGo &&  protoc --proto_path=proto --go_out=pb --go_opt=paths=source_relative \

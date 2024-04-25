@@ -62,10 +62,10 @@ func runDBMigration(migrationURL, dbSource string, db db.Store) {
 func StopDBMigration(migrationURL, dbSource string) {
 	migration, err := migrate.New(migrationURL, dbSource)
 	if err != nil {
-		log.Fatalln("cannot create migration", err)
+		log.Fatalln("cannot stop migration", err)
 	}
 	if err = migration.Down(); err != nil {
-		log.Fatalln("cannot start migration", err)
+		log.Fatalln("cannot stop migration", err)
 	}
 	log.Println("stopped")
 }

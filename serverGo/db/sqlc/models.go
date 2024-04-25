@@ -24,7 +24,7 @@ type EducationalProgram struct {
 	NameOfTheProgram    string `json:"name_of_the_program"`
 }
 
-type InformationAboutPP struct {
+type InformationAboutPp struct {
 	ID                int32  `json:"id"`
 	Department        string `json:"department"`
 	Post              string `json:"post"`
@@ -103,5 +103,5 @@ type Together struct {
 	GroupID      int32 `json:"group_id"`
 	KWID         int32 `json:"k_w_id"`
 	AmountID     int32 `json:"amount_id"`
-	SemestrID    int32 `json:"semestr_id"`
+	SemesterID   int32 `json:"semester_id"`
 }

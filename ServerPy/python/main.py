@@ -3,6 +3,8 @@ from concurrent import futures
 
 import grpc
 from docx import Document
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+from docx.shared import Inches
 
 from pb import generator_pb2
 from pb import generator_pb2_grpc
@@ -26,6 +28,7 @@ dic = {"the_code_of_the_oop_rudn": "Шифр",
        "nir_ze_by_rup": "НИР (ЗЕ по РУП)",
        "code": "Код",
        "group_number": "Номер группы",
+       "group_name":"Полное название группы",
        "of_groups": "Подгрупп",
        "subgroups": "Групп",
        "total_people": "Всего",
@@ -65,18 +68,29 @@ class FileGeneratorServicer(generator_pb2_grpc.FileGeneratorServicer):
     def Generate(self, request, context):
         print("Генерация начата")
         filepath = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../ForDownload'))
-
         name = request.name
-        filepath = os.path.join(filepath, name + ".docx")
+        filepath = os.path.join(filepath, name + ".doc")
         document = Document()
         document.add_heading(request.name, 0)
-        count = 1
+        sections = document.sections
+        for section in sections:
+         section.left_margin = Inches(1.0)  # Левое поле
+         section.right_margin = Inches(1.0)  # Правое поле
+         section.top_margin = Inches(1.0)  # Верхнее поле
+         section.bottom_margin = Inches(1.0)  # Нижнее поле
+        table = document.add_table(rows=1, cols=len(list(request.data)[0].map.keys()))
+        table.style = 'Table Grid'
+        for i, key in enumerate(list(request.data)[0].map.keys()):
+            cell = table.cell(0, i)
+            cell.text = dic[key]
+            cell.paragraphs[0].runs[0].bold = True
+            cell.paragraphs[0].alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
         for my_map in request.data:
-            document.add_heading(f'Раздел {count}', level=1)
-            for key, value in my_map.map.items():
-                # document.add_paragraph(f"Атрибут: {key} :, Значение: {value}",style='List Bullet')
-                document.add_paragraph(f" {dic[key]} : {value}", style='List Bullet')
-            count += 1
+            count=0
+            cells = table.add_row().cells
+            for i in my_map.map.values():
+                cells[count].text = str(i)
+                count+=1
         document.save(filepath)
         response = generator_pb2.GenerateResponse(
             filepath=filepath,
@@ -85,7 +99,7 @@ class FileGeneratorServicer(generator_pb2_grpc.FileGeneratorServicer):
         return response
 
 
-def serve(port):
+def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     generator_pb2_grpc.add_FileGeneratorServicer_to_server(FileGeneratorServicer(), server)
     server.add_insecure_port('[::]:1111')
@@ -95,6 +109,4 @@ def serve(port):
 
 
 if __name__ == '__main__':
-    # dotenv.load_dotenv()
-    # port = os.getenv("GRPC_SERVER_ADDRESS")
-    serve(1)
+    serve()

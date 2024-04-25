@@ -9,9 +9,9 @@ import (
 	"context"
 )
 
-const create_information_about_PPS = `-- name: Create_information_about_PPS :one
+const create_information_about_pps = `-- name: Create_information_about_pps :one
 
-INSERT INTO "information_about_PPS" ("department",
+INSERT INTO "information_about_pps" ("department",
                                      "post",
                                      "terms_of_attraction",
                                      "full_name",
@@ -20,7 +20,7 @@ VALUES ($1, $2, $3, $4, $5)
 RETURNING id, department, post, terms_of_attraction, full_name, a_special_feature
 `
 
-type Create_information_about_PPSParams struct {
+type Create_information_about_ppsParams struct {
 	Department        string `json:"department"`
 	Post              string `json:"post"`
 	TermsOfAttraction string `json:"terms_of_attraction"`
@@ -28,15 +28,15 @@ type Create_information_about_PPSParams struct {
 	ASpecialFeature   string `json:"a_special_feature"`
 }
 
-func (q *Queries) Create_information_about_PPS(ctx context.Context, arg Create_information_about_PPSParams) (InformationAboutPP, error) {
-	row := q.db.QueryRow(ctx, create_information_about_PPS,
+func (q *Queries) Create_information_about_pps(ctx context.Context, arg Create_information_about_ppsParams) (InformationAboutPp, error) {
+	row := q.db.QueryRow(ctx, create_information_about_pps,
 		arg.Department,
 		arg.Post,
 		arg.TermsOfAttraction,
 		arg.FullName,
 		arg.ASpecialFeature,
 	)
-	var i InformationAboutPP
+	var i InformationAboutPp
 	err := row.Scan(
 		&i.ID,
 		&i.Department,
@@ -48,27 +48,27 @@ func (q *Queries) Create_information_about_PPS(ctx context.Context, arg Create_i
 	return i, err
 }
 
-const get_information_about_PPS = `-- name: Get_information_about_PPS :many
+const get_information_about_pps = `-- name: Get_information_about_pps :many
 
-select distinct full_name ,department,post,terms_of_attraction from "information_about_PPS"
+select distinct full_name ,department,post,terms_of_attraction from "information_about_pps"
 `
 
-type Get_information_about_PPSRow struct {
+type Get_information_about_ppsRow struct {
 	FullName          string `json:"full_name"`
 	Department        string `json:"department"`
 	Post              string `json:"post"`
 	TermsOfAttraction string `json:"terms_of_attraction"`
 }
 
-func (q *Queries) Get_information_about_PPS(ctx context.Context) ([]Get_information_about_PPSRow, error) {
-	rows, err := q.db.Query(ctx, get_information_about_PPS)
+func (q *Queries) Get_information_about_pps(ctx context.Context) ([]Get_information_about_ppsRow, error) {
+	rows, err := q.db.Query(ctx, get_information_about_pps)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Get_information_about_PPSRow{}
+	items := []Get_information_about_ppsRow{}
 	for rows.Next() {
-		var i Get_information_about_PPSRow
+		var i Get_information_about_ppsRow
 		if err := rows.Scan(
 			&i.FullName,
 			&i.Department,

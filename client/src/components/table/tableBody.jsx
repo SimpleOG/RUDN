@@ -17,7 +17,6 @@ const TableBody = ({ data, columns }) => {
                         {renderData(item, column)}
                         {/*{item[columns[column].path]}*/}
                     </td>
-
                 ))}
             </tr>
         ))}

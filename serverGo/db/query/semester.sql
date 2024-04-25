@@ -18,7 +18,7 @@ from discipline_or_type_of_academic_work d
          join together t on d.id = t.discipline_id
          join  k_w kw on t.k_w_id = kw.id
          join the_amount_of_teaching_work_of_the_teaching_staff taotwotts on t.amount_id = taotwotts.id
-         join "information_about_PPS" iaP on iaP.id = t.teacher_id and iap.full_name= $1
+         join "information_about_pps" iaP on iaP.id = t.teacher_id and iap.full_name= $1
          join the_contingent_of_students tcos on t.group_id = tcos.id
          join educational_program ep on t.program_id = ep.id
          join semester s on s.id=t.semestr_id and semester_type=$2

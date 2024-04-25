@@ -30,7 +30,7 @@ func (s *Server) TeacherHours(ctx *gin.Context) {
 //}
 
 func (s *Server) GetTeachers(ctx *gin.Context) {
-	info, err := s.store.Get_information_about_PPS(ctx)
+	info, err := s.store.Get_information_about_pps(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
@@ -39,7 +39,7 @@ func (s *Server) GetTeachers(ctx *gin.Context) {
 	var wg sync.WaitGroup
 	for i, v := range info {
 		wg.Add(1)
-		go func(i int, v db.Get_information_about_PPSRow) {
+		go func(i int, v db.Get_information_about_ppsRow) {
 			data[i], err = s.store.Teacher_Info(ctx, v.FullName)
 			if err != nil {
 				ctx.JSON(http.StatusInternalServerError, errorResponse(err))

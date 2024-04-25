@@ -7,7 +7,9 @@ import (
 	"github.com/xuri/excelize/v2"
 	"log"
 	"strconv"
+	"strings"
 	"sync"
+	"time"
 )
 
 const (
@@ -328,10 +330,10 @@ func (qur *Queries) ReadTheContingentOfStudents(data [][]string) ([size]TheConti
 	return arr, err
 }
 
-func (qur *Queries) ReadInformationAboutPps(data [][]string) ([size]InformationAboutPP, error) {
+func (qur *Queries) ReadInformationAboutPps(data [][]string) ([size]InformationAboutPp, error) {
 	var err error
 	lock := new(sync.Mutex)
-	ma := make(map[int]InformationAboutPP)
+	ma := make(map[int]InformationAboutPp)
 	Department := data[ag]
 	Post := data[ah]
 	TermsOfAttraction := data[ai]
@@ -341,14 +343,14 @@ func (qur *Queries) ReadInformationAboutPps(data [][]string) ([size]InformationA
 	for i := 0; i < len(FullName); i++ {
 		wg.Add(1)
 		go func(i int) {
-			arg := Create_information_about_PPSParams{
+			arg := Create_information_about_ppsParams{
 				Department:        Department[i],
 				Post:              Post[i],
 				TermsOfAttraction: TermsOfAttraction[i],
 				FullName:          FullName[i],
 				ASpecialFeature:   ASpecialFeature[i],
 			}
-			c, err := qur.Create_information_about_PPS(context.Background(), arg)
+			c, err := qur.Create_information_about_pps(context.Background(), arg)
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -359,7 +361,7 @@ func (qur *Queries) ReadInformationAboutPps(data [][]string) ([size]InformationA
 		}(i)
 	}
 	wg.Wait()
-	var arr [size]InformationAboutPP
+	var arr [size]InformationAboutPp
 	for i, v := range ma {
 		arr[i] = v
 	}
@@ -582,6 +584,8 @@ func (qur *Queries) ReadSemesters(data [][]string) ([size]Semester, error) {
 
 func (qur *Queries) ReadItAll() error {
 	var err error
+	started := time.Now()
+	log.Println("Запуск в ", started)
 	data, err := ReadExcel()
 	if err != nil {
 		return err
@@ -592,14 +596,14 @@ func (qur *Queries) ReadItAll() error {
 	var discipline [size]DisciplineOrTypeOfAcademicWork
 	var kw [size]KW
 	var group [size]TheContingentOfStudent
-	var pps [size]InformationAboutPP
+	var pps [size]InformationAboutPp
 	var amount [size]TheAmountOfTeachingWorkOfTheTeachingStaff
-	var semestr [size]Semester
+	var semester [size]Semester
 	wg.Add(1)
 	go func() {
 		wg.Add(7)
 		go func() {
-			semestr, err = qur.ReadSemesters(data)
+			semester, err = qur.ReadSemesters(data)
 			if err != nil {
 				log.Fatalln(err)
 			}
@@ -660,7 +664,7 @@ func (qur *Queries) ReadItAll() error {
 				TeacherID:    pps[i].ID,
 				KWID:         kw[i].ID,
 				AmountID:     amount[i].ID,
-				SemestrID:    semestr[i].ID,
+				SemesterID:   semester[i].ID,
 			}
 			wg.Add(2)
 			go func() {
@@ -678,6 +682,7 @@ func (qur *Queries) ReadItAll() error {
 
 	}
 	wg.Wait()
+	log.Println("Всего прошло ", time.Since(started))
 	return err
 }
 
@@ -1206,26 +1211,20 @@ func (qur *Queries) ReadItAll() error {
 //
 //		return err
 //	}
-func (qur *Queries) TakeInfo(fields *[]string, name, sem_type string) ([]map[string]string, error) {
-	field := ""
-	for i, v := range *fields {
-		if i == len(*fields)-1 {
-			field += fmt.Sprintf(" \"%s\" ", v)
-			break
-		}
-		field += fmt.Sprintf(" \"%s\" ,", v)
+func (qur *Queries) TakeInfo(fields []string, name string) ([]map[string]string, error) {
+	field := strings.Join(fields, ", ")
+	distinct := ""
+	if len(fields) == 1 {
+		distinct = "distinct"
 	}
-	query := `SELECT ` + field + ` 
-	from discipline_or_type_of_academic_work d
-	join together t on d.id = t.discipline_id 
-    join  k_w kw on t.k_w_id = kw.id 	
-	join the_amount_of_teaching_work_of_the_teaching_staff taotwotts on t.amount_id = taotwotts.id 
-	join "information_about_PPS" iaP on iaP.id = t.teacher_id and iap.full_name= $1
-	join the_contingent_of_students tcos on t.group_id = tcos.id
-	join educational_program ep on t.program_id = ep.id
-	 join semester s on s.id=t.semestr_id and semester_type=$2`
-	rows, err := qur.db.Query(context.Background(), query, name, sem_type)
-
+	query := fmt.Sprintf("SELECT %s %v from discipline_or_type_of_academic_work d "+
+		"join together t on d.id = t.discipline_id "+
+		"join  k_w kw on t.k_w_id = kw.id "+
+		"join the_amount_of_teaching_work_of_the_teaching_staff taotwotts on t.amount_id = taotwotts.id "+
+		"join information_about_pps iaP on iaP.id = t.teacher_id and iap.full_name= $1 "+
+		"join the_contingent_of_students tcos on t.group_id = tcos.id "+
+		"join educational_program ep on t.program_id = ep.id ", distinct, field)
+	rows, err := qur.db.Query(context.Background(), query, name)
 	answer := make([]map[string]string, 0)
 	for rows.Next() {
 		dataMap := make(map[string]string)

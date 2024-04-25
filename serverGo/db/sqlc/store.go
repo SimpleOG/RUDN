@@ -8,12 +8,13 @@ type Store interface {
 	Querier
 	WordQuery
 }
+
 type SQLStore struct {
 	connPool *pgxpool.Pool
 	*Queries
 }
 
-// NewStore creates a new store
+// NewStore creates a new Store
 func NewStore(connPool *pgxpool.Pool) Store {
 	return &SQLStore{
 		connPool: connPool,

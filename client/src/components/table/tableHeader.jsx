@@ -16,12 +16,3 @@ const TableHeader = ({ columns }) => {
 }
 
 export default TableHeader;
-// <thead>
-// <tr>
-//     <th>ID</th>
-//     <th>Имя</th>
-//     <th>Кафедра</th>
-//     <th>Должность</th>
-//     <th>Условия содержания</th>
-// </tr>
-// </thead>

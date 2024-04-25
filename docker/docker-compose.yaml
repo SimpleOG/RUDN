@@ -1,51 +1,50 @@
 version: "3.9"
 services:
-  postgres:
-    image: postgres:12-alpine
-    environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=1234
-      - POSTGRES_DB=education
-    ports:
-      - "5440:5432"
-  go-api:
-    build:
-      context: ../serverGo
-      dockerfile: ../serverGo/Dockerfile
-    volumes:
-      - general_volume:/app/ForDownload
-    ports:
-      - "8080:8080"
-    environment:
-      - DB_SOURCE=postgresql://root:1234@postgres:5432/education?sslmode=disable
-    depends_on:
-      - postgres
-    entrypoint:
-      [
-        "/app/wait-for.sh",
-        "postgres:5432",
-        "--",
-        "/app/start.sh"
-      ]
-    command: ["/app/main"]
-
-  py-api:
-    build:
-      context: ../ServerPy
-    ports:
-      - "1111:1111"
-    volumes:
-      - general_volume:/app/ForDownload
-    depends_on:
-      - go-api
-  client:
-    build:
-      context: ../client
-    environment:
-      NODE_ENV: development
-    ports:
-      - 8081:8081
-    volumes:
-        - ../general/:/app/general
+    postgres:
+        image: postgres:12-alpine
+        environment:
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=1234
+            - POSTGRES_DB=education
+        ports:
+            - "5440:5432"
+    go-api:
+        build:
+            context: ../serverGo
+            dockerfile: ../serverGo/Dockerfile
+        volumes:
+            - general_volume:/app/ForDownload
+        ports:
+            - "8080:8080"
+        depends_on:
+            - postgres
+        environment:
+            - DB_SOURCE=postgresql://root:1234@postgres:5432/postgres?sslmode=disable
+        entrypoint:
+          [
+              "/app/wait-for.sh",
+              "postgres:5432",
+              "--",
+              "/app/start.sh"
+          ]
+        command: ["/app/main"]
+    py-api:
+        build:
+            context: ../ServerPy
+        ports:
+            - "1111:1111"
+        volumes:
+            - general_volume:/app/ForDownload
+        depends_on:
+            - go-api
+    client:
+        build:
+            context: ../client
+        environment:
+            NODE_ENV: development
+        ports:
+            - 8081:8081
+        volumes:
+            - ../general/:/app/general
 volumes:
-  general_volume:
+    general_volume:

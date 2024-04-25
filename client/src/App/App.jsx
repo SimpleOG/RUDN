@@ -13,7 +13,7 @@ const App = () => {
                 <Routes>
                     <Route path={"/"} element={<HomePage/>}/>
                     <Route path={"/teachers/:name?"} element={<Teachers/>}/>
-                    <Route path={"/groups"} element={<Courses/>}/>
+                    <Route path={"/groups"} element={<Teachers/>}/>
                     <Route path={"/courses"} element={<Teachers/>}/>
                 </Routes>
                 <div className="block-hidden"></div>

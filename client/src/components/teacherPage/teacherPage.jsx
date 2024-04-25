@@ -5,7 +5,7 @@ import {Modal} from "../shared/ui/modal/modal";
 import TeacherForm from "../teacherForm/teacherForm";
 
 const TeacherPage = ({name}) => {
-    const [select, setSelect] = useState("Autumn");
+    const [select, setSelect] = useState("Осенний");
 
     const [isOpened, setIsOpened] = useState(false);
 
@@ -30,6 +30,7 @@ const TeacherPage = ({name}) => {
         "НИР (ЗЕ по РУП)": "nir_ze_by_rup",
         "Код": "code",
         "Номер группы": "group_number",
+        "Полное название группы":"group_name",
         "Подгрупп": "of_groups",
         "Групп": "subgroups",
         "Всего": "total_people",

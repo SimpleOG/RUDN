@@ -18,7 +18,7 @@ CREATE TABLE "discipline_or_type_of_academic_work"
     "name_of_the_discipline_or_type_of_academic_work" varchar NOT NULL
 );
 
-CREATE TABLE "information_about_PPS"
+CREATE TABLE "information_about_pps"
 (
     id                    serial  not null primary key,
     "department"          varchar NOT NULL,
@@ -101,9 +101,9 @@ CREATE TABLE "together"
 (
     program_id    integer references educational_program ("id")                             not null,
     discipline_id integer references discipline_or_type_of_academic_work ("id")             not null,
-    teacher_id    integer references "information_about_PPS" ("id")                         not null,
+    teacher_id    integer references "information_about_pps" ("id")                         not null,
     group_id      integer references the_contingent_of_students ("id")                      not null,
     k_w_id        integer references k_w (id)                                               not null,
     amount_id     integer references the_amount_of_teaching_work_of_the_teaching_staff (id) not null,
-    semestr_id    integer references semester (id) not null
+    semester_id   integer references semester (id) not null
 );

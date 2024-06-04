@@ -8,10 +8,12 @@ services:
             - POSTGRES_DB=education
         ports:
             - "5440:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
     go-api:
         build:
-            context: ../serverGo
-            dockerfile: ../serverGo/Dockerfile
+            context: ../ServerGo
+            dockerfile: ../ServerGo/Dockerfile
         volumes:
             - general_volume:/app/ForDownload
         ports:
@@ -39,12 +41,11 @@ services:
             - go-api
     client:
         build:
-            context: ../client
+            context: ../Client
         environment:
             NODE_ENV: development
         ports:
             - 8081:8081
-        volumes:
-            - ../general/:/app/general
 volumes:
     general_volume:
+    postgres_data:

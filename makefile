@@ -20,7 +20,7 @@ client:
 	cd client && npm start
 runserv:
 	docker run --name server --network network -p 8080:8080  server
-dockbuild:
+build:
 	cd serverGo && docker build -t server:latest .
 test:
 	go test -v -cover ./db/tests

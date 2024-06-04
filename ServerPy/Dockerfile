@@ -17,7 +17,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 
 
-# Download dependencies as a separate step to take advantage of Docker's caching.
+# Download dependencies as a separate step to take advantage of docker's caching.
 # Leverage a cache mount to /root/.cache/pip to speed up subsequent builds.
 # Leverage a bind mount to requirements.txt to avoid having to copy them into
 # into this layer.

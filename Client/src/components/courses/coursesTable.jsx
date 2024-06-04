@@ -19,8 +19,6 @@ const CoursesTable = ({ courses }) => {
             name: "Всего часов ",
             path: "total"
         },
-
-
     }
 
     return (

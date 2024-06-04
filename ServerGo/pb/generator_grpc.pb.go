@@ -22,7 +22,7 @@ const (
 	FileGenerator_Generate_FullMethodName = "/pb.FileGenerator/Generate"
 )
 
-// FileGeneratorClient is the client API for FileGenerator service.
+// FileGeneratorClient is the Client API for FileGenerator service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FileGeneratorClient interface {

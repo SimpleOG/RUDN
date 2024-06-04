@@ -107,3 +107,4 @@ CREATE TABLE "together"
     amount_id     integer references the_amount_of_teaching_work_of_the_teaching_staff (id) not null,
     semester_id   integer references semester (id) not null
 );
+

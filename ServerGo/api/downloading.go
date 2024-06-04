@@ -22,7 +22,7 @@ func (s *Server) DownloadFile(ctx *gin.Context) {
 	var arg Fields
 	err := ctx.ShouldBindJSON(&arg)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusUnprocessableEntity, errorResponse(err))
 		return
 	}
 	filePath, err := s.FillWord(name, arg.Field)
@@ -32,7 +32,7 @@ func (s *Server) DownloadFile(ctx *gin.Context) {
 	}
 	data, err := os.ReadFile(filePath)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		ctx.JSON(http.StatusNotFound, errorResponse(err))
 		return
 	}
 

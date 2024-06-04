@@ -95,7 +95,6 @@ const TeacherPage = ({name}) => {
     }
 
     const handleChange = (target) => {
-        console.log("сработало handle change", target)
         setData((prevState) => ({
             ...prevState,
             [target.name]: target.value
@@ -115,13 +114,10 @@ const TeacherPage = ({name}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const pay = Object.values(Object.keys(data).filter((key) => Boolean(data[key])));
-        console.log(pay)
         const payload = []
         for (let i = 0; i < pay.length; i++) {
             payload.push(obj[pay[i]])
         }
-        console.log(payload)
-
         const response = await fetch(`http://localhost:8080/getWordFile/${name}`,
             {
                 method: 'POST',
@@ -131,10 +127,8 @@ const TeacherPage = ({name}) => {
                 body: JSON.stringify({array: payload})
             },
         )
-
         const responseBlob = await response.blob();
         const blobUrl = URL.createObjectURL(responseBlob);
-        //идёшь по пути который я тебе присылаю
         saveFile(blobUrl, `${name}.doc`);
     }
 
